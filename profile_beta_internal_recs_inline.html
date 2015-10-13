@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+
+  <title>Customer Profile: Beta</title>
+  
+  <script src='d3.js' type='text/javascript'></script>
+  <script src='crossfilter.js' type='text/javascript'></script>
+  <script src='dc.js' type='text/javascript'></script>
+  <script src='jquery-1.9.1.min.js' type='text/javascript'></script>
+
+
+ <!-- <script src='bootstrap.min.js' type='text/javascript'></script> 
+ <link href='bootstrap.min.css' rel='stylesheet' type='text/css'> -->
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  <link href='dc.css' rel='stylesheet' type='text/css'>
+
+  <style>
+
+ body {
+padding-top: 80px;
+}
+
+.btn-primary 
+	{
+	    background-color:  #ce2c4b !important; 
+	    background-image: none !important;
+	    border-color: #ce2c4b !important;
+	} 
+
+.btn-info 
+	{
+	    background-color:  #303239 !important; 
+	    background-image: none !important;
+	    border-color: #303239 !important;
+	} 
+
+
+ .chart_slider {
+	height: 340px;
+	overflow-x: scroll;
+	white-space:nowrap;
+	width: 100%;
+	-webkit-overflow-scrolling: touch
+	}
+
+ .single_chart {
+		display: inline-block;
+		text-align: center;
+		margin: 5px;
+		white-space: normal;
+		width: 250px;
+		float: none !important;
+	}
+
+  .product-list-item {
+		text-align: center;
+		height: 380px;
+	}
+
+  .item_title {
+  		font-size: 16px;
+		color: #303239;
+		padding-top: 10px;}
+
+  .item_region {
+
+  	color: #303239;
+  	font-weight: bold;
+  	padding-top: 5px;
+  }
+
+  .item_price {
+  	font-size: 16px; 
+  	font-weight: bold;
+  	padding-top: 10px;
+  	padding-bottom: 10px;}
+
+  .item_bottles {
+  	padding-top: 5px;
+  	padding-bottom: 5px;
+  	font-size: 14px;
+  }
+  
+  .item_purchases {
+  	padding-top: 5px;
+  	padding-bottom: 5px;
+  	font-size: 14px;
+  }
+
+ .recs_container {
+	height: 400px;
+	overflow-x: scroll;
+	white-space:nowrap;
+	-webkit-overflow-scrolling: touch;
+	margin-bottom: 10px;
+
+	}
+
+	.rec_product {
+		display: inline-block;
+		text-align: center;
+		width: 220px;
+		padding: 5px;
+		white-space: normal;
+        border-left: 1px solid #999;
+
+	}
+
+	.rec_img {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+	.rec_title {
+		display: block;
+		text-align: center;
+		clear: both;
+		font-size: 16px;
+		color: #303239;
+		padding-top: 10px;
+		height: 50px;
+	}
+
+	.rec_price {
+		display: block;
+		clear: both;
+		font-size: 16px;
+		margin-top: 10px;
+		font-weight: bold;
+	}
+
+	.biggerfont {font-size: 1.2em;}
+
+
+   h1, h2, h3, h4 {
+   	font-color: #303239;
+   }
+	
+	.main_count {
+		font-size: 16px; 
+	}
+	
+	.main_count_link {
+	}
+	
+
+	.main_count {
+		margin-bottom: 10px;
+		float: left;
+	}
+	
+	.table_div {
+		border-top: 2px solid #333;
+		}
+	
+	table {
+		font-size:1.2em;
+	}
+	
+	.chart-reset-link {
+	color: #b71f39;
+	}
+	
+	p {
+	font-size: 1.3em
+	}
+	
+	.dropdown_chooser {
+		width: 100px;
+		margin-left: 30px;
+	}
+	
+	.list_image {
+
+	 vertical-align: center;
+	 margin: auto;
+	 max-width: 150px;
+	 max-height: 150px;
+	}
+	
+	.customer_total {
+		color: rgb(49, 130, 189);
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+
+	td {
+		font-size: 16px;
+	}
+
+	.dropdown {
+		font-size: 1.4em;
+	}
+	.dropdownskinny {
+		width: 100px;
+		margin-top: 10px;
+	}
+
+	.dropdownwide {
+		width: 190px;
+		margin-top: 10px;
+	}
+
+	.top_links {
+		font-size: 1.3em;
+	}
+
+	.dc-data-count  {
+		float: right !important;
+
+
+	}
+	
+	</style>
+  
+</head>
+
+<body>
+
+<div class='container' id='main-container'>
+<div class='content'>
+
+<div class='container' style='font: 12px sans-serif;'>
+
+	 <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top filters" >
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <h1 class='navbar-brand'>Wine Profile (beta) <a style='font-size: .8em; color:#303239; font-color:#ce2c4b ; margin-top: 15px'  id="feedback_link" href="mailto:cfortin@wine.com?subject=Wine Profile Feedback"><span class="glyphicon glyphicon-envelope" style='font-size: 1.4em; top: 5px;'></span></a></h1>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right" style='padding-right:10px'>
+            <li>
+            	<select class="dropdown dropdownwide"  id="gift_personal" style='margin-top: 35px; margin-right: 5px;'>	
+			  		<option value="Personal" selected="selected">Personal Purchases</option>
+			  		<option value="Gift">Gift Purchases</option>
+	  			</select></li>
+            <li>	  
+            	<select class="dropdown dropdownskinny" id="mostRecentPurchaseYear" style='margin-top: 35px; margin-right: 5px;'>
+			  		<option value="All" selected="selected">All Time</option>
+			  		<option value="2015">2015</option>
+			  		<option value="2014">2014</option>
+			  		<option value="2013">2013</option>
+			  		<option value="2012">2012</option>
+	  			</select>
+	  		</li>
+	  		<li style="font-size:1.3em ; margin-top: 35px; margin-right: 5px"><input type="checkbox" value="hide_bad_ratings" id="hide_bad_ratings">4+ Star Rated Only</li>
+	  		<li style="font-size:1.3em; margin-top: 35px; margin-right:5px"><input type="checkbox" value="hide_oos_check" id="hide_oos_check" checked>Include Out Of Stock</li>
+	  		<li style='margin-top: 15px; margin-left: 15px;'><span class='dc-data-count main_count'>
+					<span class="filter-count"></span> out of <span id="all_count" class="customer_total"></span><button class="btn btn-info main_count_link reset_me" style='margin-left:10px'>Reset</button>
+		
+				</span>
+			</li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class='row'>
+		<div class='col-lg-8'><h4>Wine You've Purchased</h4></div>
+		<div class='col-lg-4'><span style='font-size:1.3em'>Sort By: </span>
+		  	<select class="dropdown dropdownwide dropdown-menu-right" id="sort_choice">	
+		  		<option value="purchase_date" selected="selected">Purchase Date</option>
+		  		<option value="purchases_in">Times Purchased</option>
+		  		<option value="rating">Your Rating</option>
+		  		<option value="bottles">Bottles Purchased</option>
+		  		<option value="price">Price low to high</option>
+		  		<option value="description">A-Z</option>
+		  	</select>
+		 </div>	
+	</div>
+	
+	<div class='row chart_slider filters' id='filters'>	
+		
+		<div class='single_chart' id="varietalChart"><h3>Varietal</h3></div>
+		<div class='single_chart' id="regionChart"><h3>Region</h3></div>
+		<div class='single_chart' id="appellationChart"><h3>Appellation</h3></div>
+		<div class='single_chart' id="priceChart"><h3>Price</h3></div>
+		<div class='single_chart' id="typeChart"><h3>Wine Type</h3></div>
+		<div class='single_chart' id="styleChart"><h3>Wine Style</h3></div>
+
+  	</div>
+
+  	<div class='row rec_bar'>
+		<div class="modal fade " id="recsModal"  tabindex="-1" role="dialog" aria-labelledby="recsModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="recsModalLabel"></h4>
+		      </div>
+		      <div class="modal-body">
+		      		<div class='recs_container'></div>
+		      </div>
+		    </div>
+		   </div>
+		</div>
+  	</div>
+
+ <div class='row' id="product_list">
+
+ </div>
+
+
+
+<div class="modal fade" id="more_info_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+ 			
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+<!--
+  <div class='row'>
+  <div class='col-md-12 table_div'>
+
+      <table class=' table table-hover' id='product-table-graph'>
+        <thead>
+          <tr class='header'>
+			<th></th>
+          </tr>
+        </thead>
+      </table>
+  </div>
+  	
+  </div>
+
+  <div class='row'>
+  <div class='col-md-12 table_div'>
+
+      <table class=' table table-hover' id='product-table-graph'>
+        <thead>
+          <tr class='header'>
+			<th></th>
+			<th><a class="table_metric" data-title="description" value="ascending" href='javascript:void(0);'>Description</a></th>
+			<th><a class="table_metric" data-title="bottles" value="descending" href='javascript:void(0);'>Bottles</a></th>		
+			<th><a class="table_metric" data-title="purchases_in" value="descending" href='javascript:void(0);'>Purchases</a></th>
+			<th style='width:130px'><a class="table_metric" data-title="rating" value="descending" href='javascript:void(0);'>Your Rating</a></th>
+			<th><a class="table_metric" data-title="price" value="descending" href='javascript:void(0);'>Price</a></th>
+
+          </tr>
+        </thead>
+      </table>
+  </div>
+  	
+  </div>
+-->
+  
+  	
+  
+</div>
+</div>
+</div>
+  
+<script>
+  
+/*
+$( "#hide_filters" ).click(function() {
+	$( "#filters" ).slideToggle( "slow" );
+	if ($(this).html() == "Hide Filters") {
+	  $("#hide_filters").html("Show Filters");
+		}
+		else {
+	  $("#hide_filters").html("Hide Filters");
+		}
+	});
+  */
+
+function substringFormat(text) {
+if ( text.length > 70) {
+return text.substring(0,70) + "...";
+}
+else
+{
+return text;
+}
+}
+
+
+/*
+if ($.cookie('modal_shown') == null) {
+    $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
+     $('#welcomeModal').modal();
+ }
+ */
+
+/**********************************
+* Step0: Load data  *
+**********************************/
+// load data from a csv file
+d3.csv("products_customer_internal.csv", function (data) {
+ 
+//getting the product count for just the customer selected and insertign into DOM
+ //customer_name_chosen = loadSelected("customer_choice","value"),
+ //customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length;
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "Cam F" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+
+/*
+$('#hide_bad_ratings').click(function () {
+	if ($('#hide_bad_ratings').html() == 'Show 4 &amp; 5 Star Only') {
+	  $("#hide_bad_ratings").html("Show All Ratings");
+	  ratingDimension.filterFunction(function(d) { return d > 3; });
+      dc.redrawAll();
+		}
+		else {
+	  $("#hide_bad_ratings").html("Show 4 &amp; 5 Star Only");
+	  ratingDimension.filterAll();
+	  dc.redrawAll();
+		}
+})
+*/
+
+$('#hide_bad_ratings').click(function () {
+	if (document.getElementById('hide_bad_ratings').checked) {
+		  ratingDimension.filterFunction(function(d) { return d > 3; });
+	      dc.redrawAll();
+		}
+		else {
+		  ratingDimension.filterAll();
+		  dc.redrawAll();
+		}
+})
+
+/*
+$('#hide_oos').click(function () {
+	if ($('#hide_oos').html() == 'Exclude Out Of Stock') {
+	  $("#hide_oos").html("Include Out Of Stock");
+	  stockDimension.filterFunction(function(d) { return d > 0; });
+      dc.redrawAll();
+		}
+		else {
+	  $("#hide_oos").html("Exclude Out Of Stock");
+	  stockDimension.filterAll();
+	  dc.redrawAll();
+		}
+})
+*/
+
+$('#hide_oos_check').click(function () {
+	if (document.getElementById('hide_oos_check').checked) {
+	  	  console.log('false');
+		  stockDimension.filterAll();
+		  dc.redrawAll();
+
+		}
+		else {
+		  console.log('true');
+		  stockDimension.filterFunction(function(d) { return d > 0; });
+	      dc.redrawAll();
+		}
+})
+
+$('.reset_me').click(function() {
+	//$("#hide_bad_ratings").html("Show 4 &amp; 5 Star Only");
+	//$("#hide_oos").html("Exclude Out Of Stock");
+	document.getElementById("hide_oos_check").checked = true;
+	document.getElementById("hide_bad_ratings").checked = false;
+   ratingDimension.filterAll();
+   stockDimension.filterAll();
+   dc.filterAll(); 
+   dc.redrawAll(); 
+   runAjax();
+});
+
+var customerSelected = getParameterByName('customer');
+console.log(customerSelected);
+
+
+//Filter for a name before loading into crossfilter
+var data2 = data.filter(function(d, i) { return d.customer == customerSelected; });
+//var priceFilter = data.filter(function(d, i) { return d.price < 20; });
+//var regionVarietalCombo = data.filter(function(d, i) { return d.varietal + ' ' + d.appellation == 'Cabernet Sauvignon Argentina' ; });
+
+customerProductCount = data2.length;
+document.getElementById("all_count").innerHTML = customerProductCount;
+
+	//Show Specific customer_name
+ d3.selectAll("select").on("change", function() {
+    //customer_name_chosen = loadSelected("customer_choice","value");
+    gift_personal_choice = loadSelected("gift_personal", "value");
+	//customerDimension.filter(customer_name_chosen); 
+  //customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length; 
+  customerProductCount = data2.length; 
+  document.getElementById("all_count").innerHTML = customerProductCount;
+	giftPersonalDimension.filter(gift_personal_choice)
+	show_product_list();
+    dc.redrawAll();
+  });
+
+
+  d3.selectAll(".main_count_link").on("click", function() { 
+	purchaseYearDimension.filterAll();
+	$('#mostRecentPurchaseYear').val('All');
+    dc.renderAll();
+  });
+
+  d3.selectAll("#mostRecentPurchaseYear").on("change", function() {
+    year_chosen = loadSelected("mostRecentPurchaseYear","value");
+	if (year_chosen == 'All') 
+	{
+		purchaseYearDimension.filterAll();
+		dc.redrawAll();
+	}
+	else
+	{
+		purchaseYearDimension.filter(year_chosen); 
+		dc.redrawAll();
+	}
+    
+  });
+
+  // format our data
+  var commaFormat = d3.format(",.0f");
+  var percentFormat = d3.format("%.0f");
+  var moneyFormat = d3.format("$,.0f");
+  var moneyFormatDecimal = d3.format("$,.2f");
+  
+  data.forEach(function(d) { 
+    d.description   = d.description; 
+    d.productid  = +d.productid;
+	d.price = +d.price;
+	d.customer_name = d.customer;
+	d.score = +d.score;
+	d.sort_order = +d.sort_order;
+	d.highestrating = +d.highestrating;
+	d.purchases_in = +d.purchases_in;
+	d.bottles = +d.bottles;
+	d.giftStatus = d.giftstatus;
+	d.stock = +d.stock;
+	d.purchase_date = +d.lastPurchaseDate;
+  });
+
+
+// Calculate CUstomer Specific Metrics
+var prices = [];
+ data2.forEach(function(d) { 
+	prices.push(d.price);
+  });
+
+ var total_price = prices.reduce(function(a, b) {
+  return a + b;
+	});
+
+ var average_price = moneyFormat(d3.sum(prices)/prices.length), 
+  max_price = moneyFormat(d3.max(prices));
+  min_price = moneyFormat(d3.min(prices));
+
+
+ console.log("Average price:" + average_price + " Max Price: " + max_price + " Min Price: " + min_price);
+
+
+
+/******************************************************
+* Step1: Create the dc.js chart objects & ling to div *
+******************************************************/
+  var varietalChart = dc.pieChart("#varietalChart");
+  var regionChart = dc.pieChart("#regionChart");
+  var appellationChart = dc.pieChart("#appellationChart");
+  var priceChart = dc.pieChart("#priceChart");
+  var styleChart = dc.pieChart("#styleChart");
+  var typeChart = dc.pieChart("#typeChart");
+
+  // var dataTable = dc.dataTable("#product-table-graph");
+
+console.log(data.length);
+console.log(data2.length);
+
+//console.log(data2.length);
+/****************************************
+* 	Run the data through crossfilter    *
+****************************************/
+
+  var facts = crossfilter(data2);  // Gets our 'facts' into crossfilter
+
+/******************************************************
+* Create the Dimensions                               *
+* A dimension is something to group or filter by.     *
+* Crossfilter can filter by exact value, or by range. *
+******************************************************/
+
+
+  // For datatable
+
+	var typeDimension = facts.dimension(function (d) {
+	return d.class	;
+	}); 
+ 	var typeGroup = typeDimension.group();
+
+ 	var stockDimension = facts.dimension(function (d) {
+ 	return d.stock;
+ 	});
+
+ 	var ratingDimension = facts.dimension(function (d) {
+	return d.rating	;
+	}); 
+ 	var ratingGroup = ratingDimension.group();
+
+	var varietalDimension = facts.dimension(function (d) {
+	return d.varietal;
+	});
+	var varietalGroup = varietalDimension.group();
+
+	var appellationDimension = facts.dimension(function (d) {
+	return d.appellation;
+	});
+	var appellationGroup = appellationDimension.group();
+
+	var regionDimension = facts.dimension(function (d) {
+	return d.region;
+	});
+	var regionGroup = regionDimension.group();
+
+	var purchaseYearDimension = facts.dimension(function (d) {
+	return d.MostRecentPurchaseYear;
+	});
+
+    var giftPersonalDimension = facts.dimension(function (d) {
+	return d.giftstatus;
+	});
+	var giftPersonalGroup = regionDimension.group();
+
+	var styleDimension = facts.dimension(function (d) {
+	return d.winestyle;
+	});
+	var styleGroup = styleDimension.group();
+
+	var priceBucketDimension = facts.dimension(function (d) {
+		if (d.price < 15) {return "<$15";}
+		else if (d.price < 30) {return "$15-$30";}
+		else if (d.price < 50) {return "$30-$50";}
+		else if (d.price < 75) {return "$50-$75";}
+		else if (d.price < 100) {return "$75-$100";}
+		else {return "$100+";}
+	});
+
+	var priceBucketGroup = priceBucketDimension.group();
+	  
+	function loadSelected(domID,valueOrText) {
+		if(valueOrText == "value") {
+			return document.getElementById(domID).options[document.getElementById(domID).selectedIndex].value;
+		}
+		else {
+			return document.getElementById(domID).options[document.getElementById(domID).selectedIndex].innerHTML;
+		}
+	}
+
+/*
+original_name_chosen = loadSelected("customer_choice","value");
+customerDimension.filter(original_name_chosen); 
+*/
+
+gift_personal = loadSelected("gift_personal","value");
+giftPersonalDimension.filter(gift_personal); 
+
+
+/****************************************
+* 	Data Count Widget JS   *
+****************************************/
+
+	var all = facts.groupAll();
+
+	dc.dataCount(".dc-data-count")
+	 .dimension(facts)
+	 .group(all);
+
+
+var chartWidth = 245;
+var chartHeight = 245;
+var chartRadius = 120;
+var minAngleLabels = .3;
+var chartSlicesCap = 7;
+
+
+regionChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+        .dimension(regionDimension) // set dimension
+        .group(regionGroup) // set group
+        /* (optional) by default pie chart will use group.key as its label
+         * but you can overwrite it with a closure */
+        .ordering(function(d){return -d.value;})
+        /*
+        .label(function (d) {
+            if (regionChart.hasFilter() && !regionChart.hasFilter(d.key)) {
+                return d.key + '(0%)';
+            }
+            var label = d.key;
+            if (all.value()) {
+                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
+            }
+            return label;
+        }) 
+*/
+    .label(function (d) {
+            return d.key ;
+        })
+	.renderLabel(true)
+	.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap])
+  .on('postRedraw', function(regionChart) {
+   // runAjax();
+  })
+  ;
+
+varietalChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+        .dimension(varietalDimension) // set dimension
+        .group(varietalGroup) // set group
+        
+        .ordering(function(d){return -d.value;})
+    .label(function (d) {
+            return d.key ;
+        })
+	.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap]);
+
+priceChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+        .dimension(priceBucketDimension) // set dimension
+        .group(priceBucketGroup) // set group
+        .ordering(function(d){return -d.value;})
+    .label(function (d) {
+            return d.key ;
+        })
+	.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap]);
+
+appellationChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+    .dimension(appellationDimension) // set dimension
+    .group(appellationGroup) // set group
+        .ordering(function(d){return -d.value;})
+        .label(function (d) {
+            return d.key ;
+        })
+	.renderLabel(true)	
+	.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap]);
+
+
+styleChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+    .dimension(styleDimension) // set dimension
+    .group(styleGroup) // set group
+        .ordering(function(d){return -d.value;})
+       .label(function (d) {
+            return d.key ;
+        })
+	.renderLabel(true)
+		.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap]);
+
+typeChart
+        .width(chartWidth) // (optional) define chart width, :default = 200
+        .height(chartHeight) // (optional) define chart height, :default = 200
+        .radius(chartRadius) // define pie radius
+    .dimension(typeDimension) // set dimension
+    .group(typeGroup) // set group
+        .ordering(function(d){return -d.value;})
+    .label(function (d) {
+            return d.key ;
+        })
+	.renderLabel(true)
+		.minAngleForLabel([minAngleLabels])
+	.slicesCap([chartSlicesCap]);
+
+//sortable column headers by user	
+  function sort_by_user(sortOrderChosen) {
+  dataTable	
+	.sortBy(function(d){ return d[sortOrderChosen]; })
+    .order(d3.descending);
+  dc.renderAll();
+} 
+
+
+$( ".table_metric" ).click(function() {
+    var sortValueChosen = $(this).attr("data-title");
+    var sortOrderChosen = $(this).attr("value");
+	console.log(sortValueChosen + " " + sortOrderChosen);
+	dataTable	
+	.sortBy(function(d){ return d[sortValueChosen]; })
+    .order(d3[sortOrderChosen]);
+	if (sortOrderChosen == "descending") {
+	   $(this).attr("value","ascending");
+		}
+		else {
+	   $(this).attr("value","descending");
+		}
+       dc.redrawAll();
+	
+  });
+
+
+  //Any Ratings?
+	 var ratings = [];
+		 data2.forEach(function(d) { 
+		ratings.push(d.rating);
+	  	});	
+	 var max_rating = d3.max(ratings);
+	 console.log("Customers max rating: " + max_rating);
+	 var sort_metric = "purchases_in";
+	 if (max_rating != -1) {sort_metric = "rating";}
+	 console.log(sort_metric);
+
+	show_correct_buttons = function(d) { 
+
+		if (d.stock === 0) {
+		  		return 		"<div class='item_stats' style='margin-top:10px;'><div class='item_bottles'>Bottles Purchased: " + d.bottles + "</div><div class='item_purchases'>Purchases: "  + d.purchases_in + "</div></div>";} 
+		  		else {
+		  		return "<div class='item_bottles'>Bottles Purchased: " + d.bottles + "</div><div class='item_purchases'>Purchases: "  + d.purchases_in + "</div><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'><button type='button' style='margin-left: 10px' class='add_to_cart btn btn-primary list_buttons'" + d.product_id + "'>Add to Cart</button></a>";}
+		  	};
+	
+	show_stars = function(d) {
+				var stars = [];
+				for (i=0; i<d.rating ; i++) {
+				stars.push('<img height="20px" width="20px" src="star_red.png">');
+				}
+				var empty_stars = 5-stars.length;
+				for (i=0; i<empty_stars ; i++) {
+				stars.push('<img height="20px" width="20px" src="star_empty.png">');
+				}
+				return "<div class='item_stars'>" + stars.join('') + "</div>";
+
+			}
+
+var show_product_list = function() {
+
+
+
+var 
+
+    sort_value = loadSelected("sort_choice", "value");
+	console.log("Sort = " + sort_value);
+
+if (sort_value === "bottles" || sort_value === "rating" || sort_value === "purchases_in" || sort_value === "purchase_date") 
+{
+
+	var allProducts = typeDimension.top(Infinity).sort(function(a,b) {
+			return b[sort_value] - a[sort_value];
+		});
+}
+
+else if (sort_value  === "purchase_date_asc")
+{
+		var allProducts = typeDimension.top(Infinity).sort(function(a,b) {
+			return a[sort_value] - b[sort_value];
+		});
+}
+
+else if (sort_value === "price_ascending")
+{
+	var allProducts = typeDimension.top(Infinity).sort(function(a,b) {
+		return a.price - b.price;
+	});
+}
+
+else
+{
+
+	var allProducts = typeDimension.top(Infinity).sort(function(a, b){
+	    if(a.description < b.description) return -1;
+	    if(a.description > b.description) return 1;
+	    return 0;
+	})
+}
+
+var topProducts = [];
+for (i = 0 ; i < 10 ; i++) {
+	topProducts.push(allProducts[i]);
+}
+
+// console.log("Top Products: " + topProducts);
+
+  $("#product_list").html("");
+
+    topProducts.forEach(function(d) { 
+
+	$('#product_list').append("<div class='row rec_row' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage +"' style='border-bottom: 1px solid gray;'><div class='col-sm-4 product-list-item'><h4>You Purchased</h4><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.product_id + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div><div class='col-sm-8 recs_container' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage +"'><h4>Similar Products to " + d.descriptionWithVintage + "</h4><div class='rec_container_" + d.product_id + "' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage + "'></div></div></div><div class='row' style='padding-top: 10px;'><ul class='nav nav-list'><li class='divider'></li></ul></div>");
+
+	    var returnedProducts = [];
+	    var this_product_id = d.product_id;
+	    var this_product_name = d.descriptionWithVintage;
+	    var attach_div = '.rec_container_' + this_product_id;
+	  //  console.log("Attach div: " + attach_div + "product name = " + this_product_name);
+
+
+    //var this_strategy_description = 'ProductBoughtBought';	
+    var this_strategy_description = 'SimilarProducts3';
+
+    var myApiKey = encodeURIComponent('fd89fba2959239b2'); 
+    var myClientKey = encodeURIComponent('983968841cc325da');
+
+     //console.log(this_product_description + " " + this_product_id);
+     //console.log(this_strategy_description);
+
+    $.ajax('https://recs.richrelevance.com/rrserver/api/rrPlatform/recsUsingStrategy', {
+        data: {
+            apiClientKey: myClientKey,
+            apiKey: myApiKey,
+            userId: '1841734',
+            sessionId: '74ea5182-47e1-47e5-a305-238e2c4df806',
+            resultCount: 24,
+            // strategyName: 'SimilarProducts3',
+            //strategyName: "RecentlyPurchased3",
+            strategyName: "SimilarProducts3",
+            seed: this_product_id,
+            jsonp: true,
+            jcb: '?'
+        }, dataType: 'jsonp'
+   	 }).then(function(data) {
+        var items = data.recommendedProducts.map(function(item) {
+            item.regional_sku = 'REGIONAL_SKU';
+            item.highest_rating_publications_ini = "XX";
+            item.price = (''+item.priceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2');
+            item.sale_price = item.salePriceCents ? (''+item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
+            return item;
+        });
+
+
+		for (i=0 ; i<items.length ; i++)
+		{
+
+		var titleone = items[i].name;
+
+	  // WHY DOESNT THIS WORK!!!  $('#recs_container_105748') or
+	  // WHY DOESNT THIS WORK!!!  $('#' + attach_div) 
+       
+	  attach_div_test = '.rec_container_' + '105748';
+	  attach_div_fake = '.recs_container_105748';
+
+       //$(attach_div).append("<div class='rec_product'><a href='http://www.wine.com/v6/wine/" + items[i].id + "/Detail.aspx?s=wine_profile_recs&cid=wine_profile_recs' ><img class='rec_image' src='http://cache.wine.com/labels/" + items[i].id + "l.jpg'><span class='rec_title'>" + items[i].name + "</span></a><span class='rec_price'>" + items[i].sale_price + "</span><a class='more_info' style='font-size: 1.2em; margin-right: 10px; top:20px;' data='" + items[i].id +"' href='javascript:void(0);'>more info</a><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + items[i].id +"&s=wine_profile_rec_modal&cid=wine_profile_rec_modal' target='blank'><button class='add_to_cart btn btn-primary' style='margin-top: 10px;' data='" + items[i].id + "'>Add to Cart</button></div>");
+       $(attach_div).append("<div class='rec_product'><a href='http://www.wine.com/v6/wine/" + items[i].id + "/Detail.aspx?s=wine_profile_recs&cid=wine_profile_recs' ><img class='rec_image' src='http://cache.wine.com/labels/" + items[i].id + "l.jpg'><span class='rec_title'>" + items[i].name + "</span></a><span class='rec_price'>" + items[i].sale_price + "</span><button class='more_info btn' style='margin-top: 10px; margin-right: 10px' data='" + items[i].id +"' href='javascript:void(0);'>more...</button><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + items[i].id +"&s=wine_profile_rec_modal&cid=wine_profile_rec_modal' target='blank'><button class='add_to_cart btn btn-primary' style='margin-top: 10px;' data='" + items[i].id + "'>Add to Cart</button></a></div>");
+
+ 		}
+ 		});
+    	});
+
+	}
+
+	$(document).on('click', ".more_info", function () {
+	var id_for_api = $(this).attr("data");
+
+	var api_url = 'https://services.wine.com/api/beta2/service.svc/json/catalog?apikey=3scale-456a2ca3b0e963b7452bf60672e53361&filter=product(' + id_for_api + ')&state=ca';
+		
+	$.get(api_url).then(function(response) {
+    // use the response here, for example:                                         // Object {Status: Object, Products: Object}
+
+    var product_node = response.Products.List[0];
+
+    var modal_description = product_node.Description;
+    var Longitude = response.Products.List[0].GeoLocation.Longitude; 
+    var Latitude = response.Products.List[0].GeoLocation.Latitude; 
+    var prod_id = product_node.Id;
+    var product_brand = product_node.Vineyard.Name;
+    var prod_name = product_node.Name;
+    var prod_varietal = product_node.Varietal.Name;
+    var prod_appellation = product_node.Appellation.Name;
+    var prod_region = product_node.Appellation.Region.Name;
+    var prod_high_rating = product_node.Ratings.HighestScore;
+
+
+    //var map_url = 'https://www.google.com/maps/embed/v1/place?q=' + Longitude + '5%2C%20' + Longitude+ '&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q';
+    
+    var small_label = "<img style='display:inline-block; float:left; clear: none; margin: 10px;' src='http://cache.wine.com/labels/" + prod_id + "m.jpg'>";
+
+    var product_info = "<h5>" + prod_varietal + " from " + prod_appellation + ", " + prod_region + "</h5>";
+
+
+    if (Longitude !== -360) {
+    
+    	$('.modal-body').html("<div class='row' style='background-color:white; padding:10px;'>" + small_label + product_info + modal_description + "</div><div class='row' style='background-color:white; padding:10px';'><iframe width='250' height='250' frameborder='0' style='border:0; float: right; display: inline-block;' src='https://www.google.com/maps/embed/v1/place?q=" + Latitude + "%20" + Longitude + "&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q&zoom=14&maptype=satellite'></iframe></div>");
+	} else {
+		$('.modal-body').html("<div>" + small_label + product_info + modal_description + "</div>");
+	}
+    
+    $('.modal-title').html(prod_name);
+    //$('.product_info').html(product_info);
+   // $('.modal-body').html("<p>" +  map_entry + modal_description + "</p>");
+
+
+    //$('#more_info_modal').remove();
+    
+    $('#more_info_modal').modal();
+
+
+
+    console.log(response.Products.List[0].Name);
+    return false;
+	});
+	});
+
+show_product_list();
+
+ 	
+  $('.filters').on("click", function() {
+
+   show_product_list();
+  //runAjax();
+
+   
+   });
+
+
+/****************************
+* Step6: Render the Charts  *
+****************************/
+			
+  dc.renderAll();
+
+});
+  
+  
+</script>
+    
+</body>
+</html>
+	
