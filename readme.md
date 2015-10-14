@@ -6,9 +6,9 @@
 
 **Front End** 
 
-* Show Loading Spinner until data loaded
-* Add customer name to UI
-* Hide elements if not applicable
+* ~~Show Loading Spinner until data loaded~~
+* ~~Add customer name to UI~~
+* ~~Hide elements if not applicable~~
 * Recs
 	* Update rec population to go through RR strategies in order and render results for first strategy with results: Tastes Like, Similar Products, Bought Bought, Popular in Region / Varietal
 	* Call for 40, chose 10 randomly and show
@@ -16,6 +16,7 @@
 **Back End**
 
 * Create Rich Relevance API with customer product information instead of csv file
+	* Add purchase date in addition to just purchase year
 
 **Add Commit v1.1**
 
