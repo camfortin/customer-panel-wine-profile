@@ -1,0 +1,206 @@
+ body {
+padding-top: 80px;
+}
+
+.btn-primary 
+	{
+	    background-color:  #ce2c4b !important; 
+	    background-image: none !important;
+	    border-color: #ce2c4b !important;
+	} 
+
+.btn-info 
+	{
+	    background-color:  #303239 !important; 
+	    background-image: none !important;
+	    border-color: #303239 !important;
+	} 
+
+
+ .chart_slider {
+	height: 340px;
+	overflow-x: scroll;
+	white-space:nowrap;
+	width: 100%;
+	-webkit-overflow-scrolling: touch
+	}
+
+ .single_chart {
+		display: inline-block;
+		text-align: center;
+		margin: 5px;
+		white-space: normal;
+		width: 250px;
+		float: none !important;
+	}
+
+  .product-list-item {
+		text-align: center;
+		height: 380px;
+	}
+
+  .item_title {
+  		font-size: 16px;
+		color: #303239;
+		padding-top: 10px;}
+
+  .item_region {
+
+  	color: #303239;
+  	font-weight: bold;
+  	padding-top: 5px;
+  }
+
+  .item_price {
+  	font-size: 16px; 
+  	font-weight: bold;
+  	padding-top: 10px;
+  	padding-bottom: 10px;}
+
+  .item_bottles {
+  	padding-top: 5px;
+  	padding-bottom: 5px;
+  	font-size: 14px;
+  }
+  
+  .item_purchases {
+  	padding-top: 5px;
+  	padding-bottom: 5px;
+  	font-size: 14px;
+  }
+
+ .recs_container {
+	height: 400px;
+	overflow-x: scroll;
+	white-space:nowrap;
+	-webkit-overflow-scrolling: touch;
+	margin-bottom: 10px;
+
+	}
+
+	.rec_product {
+		display: inline-block;
+		text-align: center;
+		width: 220px;
+		padding: 5px;
+		white-space: normal;
+        border-left: 1px solid #999;
+
+	}
+
+	.rec_img {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+	.rec_title {
+		display: block;
+		text-align: center;
+		clear: both;
+		font-size: 16px;
+		color: #303239;
+		padding-top: 10px;
+		height: 50px;
+	}
+
+	.rec_price {
+		display: block;
+		clear: both;
+		font-size: 16px;
+		margin-top: 10px;
+		font-weight: bold;
+	}
+
+	.biggerfont {font-size: 1.2em;}
+
+
+   h1, h2, h3, h4 {
+   	font-color: #303239;
+   }
+	
+	.main_count {
+		font-size: 16px; 
+	}
+	
+	.main_count_link {
+	}
+	
+
+	.main_count {
+		margin-bottom: 10px;
+		float: left;
+	}
+	
+	.table_div {
+		border-top: 2px solid #333;
+		}
+	
+	table {
+		font-size:1.2em;
+	}
+	
+	.chart-reset-link {
+	color: #b71f39;
+	}
+	
+	p {
+	font-size: 1.3em
+	}
+	
+	.dropdown_chooser {
+		width: 100px;
+		margin-left: 30px;
+	}
+	
+	.list_image {
+
+	 vertical-align: center;
+	 margin: auto;
+	 max-width: 150px;
+	 max-height: 150px;
+	}
+	
+	.customer_total {
+		color: rgb(49, 130, 189);
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+
+	td {
+		font-size: 16px;
+	}
+
+	.dropdown {
+		font-size: 1.4em;
+	}
+	.dropdownskinny {
+		width: 100px;
+		margin-top: 10px;
+	}
+
+	.dropdownwide {
+		width: 190px;
+		margin-top: 10px;
+	}
+
+	.top_links {
+		font-size: 1.3em;
+	}
+
+	.dc-data-count  {
+		float: right !important;
+
+
+	}
+
+	.loader {
+	  position: fixed;
+	  left: 0px;
+	  top: 0px;
+	  width: 100%;
+	  height: 100%;
+	  z-index: 9999;
+	  background: url('page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
+	}
