@@ -2,6 +2,20 @@
 
 [Live Version](https://dl.dropboxusercontent.com/u/6406525/customer_panel_wine_profile/profile.html?customer=Karthik%20K)
 
+##Research
+
+**Using D3 and crossfilter in meteor**
+* [DC JS meteor package] (https://atmospherejs.com/mrt/dc.js-package)
+* [Hackpad showing how to use dc without mongo in meteor](https://meteor.hackpad.com/Visualize-mongoDb-with-dcJs-Meteor-D0rvgO774Oo#:h=iv)-Issue)
+
+Algorithms
+* Which lists to show to which customers
+* Predicted product purchase affinity / rating
+
+##Versions
+
+###V1.0: Live
+
 ###V1.1
 
 **Front End** 
