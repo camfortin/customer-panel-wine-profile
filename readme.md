@@ -24,8 +24,10 @@ Algorithms
 * ~~Show Loading Spinner until data loaded~~
 * ~~Add customer name to UI~~
 * ~~Hide elements if not applicable~~
+* ~~Change charts from Pie to vertical Row chart~~
+	* Make text white and make bar widths consistent
 * Recs
-	* Update rec population to go through RR strategies in order and render results for first strategy with results: Tastes Like, Similar Products, Bought Bought, Popular in Region / Varietal
+	* Update rec population to go through RR Recs for Placement API anduse: Tastes Like, Similar Products, Bought Bought, Popular in Region / Varietal
 	* Call for 40, chose 10 randomly and show
 
 **Back End**
@@ -36,8 +38,6 @@ Algorithms
 **Add Commit v1.1**
 
 ###V1.2
-* Change charts from Pie to vertical Row chart
-	* Only show Varietal, Region, Appellation, Price, Style
 * Show recommended products on click, not automatically
 * Return 50 products for purhased list instead of current 10
 * Add all currently selected filters in text above filters title with "x" to remove each
