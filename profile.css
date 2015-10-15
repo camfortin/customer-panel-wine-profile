@@ -36,7 +36,10 @@ padding-top: 80px;
 
   .product-list-item {
 		text-align: center;
-		height: 380px;
+		height: 420px;
+		padding-bottom: 10px;
+		padding-top: 30px;
+        border-top: 1px solid #999;
 	}
 
   .item_title {
@@ -45,21 +48,23 @@ padding-top: 80px;
 		padding-top: 10px;}
 
   .item_region {
-
   	color: #303239;
-  	font-weight: bold;
   	padding-top: 5px;
   }
 
+  .action_link {
+  	font-size: 16px;
+  }
+
   .item_price {
-  	font-size: 16px; 
+  	font-size: 18px; 
   	font-weight: bold;
   	padding-top: 10px;
   	padding-bottom: 10px;}
 
   .item_bottles {
-  	padding-top: 5px;
-  	padding-bottom: 5px;
+  	padding-top: 15px;
+  	padding-bottom: 15px;
   	font-size: 14px;
   }
   
@@ -157,8 +162,10 @@ padding-top: 80px;
 
 	 vertical-align: center;
 	 margin: auto;
-	 max-width: 150px;
-	 max-height: 150px;
+	 width: 180px;
+	 max-width: 100%;
+	 max-height: 180px;
+	 min-height: 180px
 	}
 	
 	.customer_total {

@@ -1,17 +1,3 @@
-
-  
-/*
-$( "#hide_filters" ).click(function() {
-  $( "#filters" ).slideToggle( "slow" );
-  if ($(this).html() == "Hide Filters") {
-    $("#hide_filters").html("Show Filters");
-    }
-    else {
-    $("#hide_filters").html("Hide Filters");
-    }
-  });
-  */
-
 function substringFormat(text) {
 if ( text.length > 70) {
 return text.substring(0,70) + "...";
@@ -37,30 +23,14 @@ if ($.cookie('modal_shown') == null) {
 d3.csv("products_customer_internal.csv", function (data) {
  
 //getting the product count for just the customer selected and insertign into DOM
- //customer_name_chosen = loadSelected("customer_choice","value"),
- //customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length;
+//customer_name_chosen = loadSelected("customer_choice","value"),
+//customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length;
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "Cam F" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
-
-/*
-$('#hide_bad_ratings').click(function () {
-  if ($('#hide_bad_ratings').html() == 'Show 4 &amp; 5 Star Only') {
-    $("#hide_bad_ratings").html("Show All Ratings");
-    ratingDimension.filterFunction(function(d) { return d > 3; });
-      dc.redrawAll();
-    }
-    else {
-    $("#hide_bad_ratings").html("Show 4 &amp; 5 Star Only");
-    ratingDimension.filterAll();
-    dc.redrawAll();
-    }
-})
-*/
 
 $('#hide_bad_ratings').click(function () {
   if (document.getElementById('hide_bad_ratings').checked) {
@@ -72,21 +42,6 @@ $('#hide_bad_ratings').click(function () {
       dc.redrawAll();
     }
 })
-
-/*
-$('#hide_oos').click(function () {
-  if ($('#hide_oos').html() == 'Exclude Out Of Stock') {
-    $("#hide_oos").html("Include Out Of Stock");
-    stockDimension.filterFunction(function(d) { return d > 0; });
-      dc.redrawAll();
-    }
-    else {
-    $("#hide_oos").html("Exclude Out Of Stock");
-    stockDimension.filterAll();
-    dc.redrawAll();
-    }
-})
-*/
 
 $('#hide_oos_check').click(function () {
   if (document.getElementById('hide_oos_check').checked) {
@@ -217,8 +172,6 @@ var prices = [];
 
  console.log("Average price:" + average_price + " Max Price: " + max_price + " Min Price: " + min_price);
 
-
-
 /******************************************************
 * Step1: Create the dc.js chart objects & ling to div *
 ******************************************************/
@@ -258,6 +211,7 @@ console.log(data2.length);
   var stockDimension = facts.dimension(function (d) {
   return d.stock;
   });
+
 
   var ratingDimension = facts.dimension(function (d) {
   return d.rating ;
@@ -475,7 +429,6 @@ $( ".table_metric" ).click(function() {
   
   });
 
-
   //Any Ratings?
    var ratings = [];
      data2.forEach(function(d) { 
@@ -490,9 +443,9 @@ $( ".table_metric" ).click(function() {
   show_correct_buttons = function(d) { 
 
     if (d.stock === 0) {
-          return    "<div class='item_stats' style='margin-top:10px;'><div class='item_bottles'>Bottles Purchased: " + d.bottles + "</div><div class='item_purchases'>Purchases: "  + d.purchases_in + "</div></div>";} 
+          return    "<div class='item_stats'><div class='item_bottles'>" + d.bottles + " bottle(s) purchased </div></div>";} 
           else {
-          return "<div class='item_bottles'>Bottles Purchased: " + d.bottles + "</div><div class='item_purchases'>Purchases: "  + d.purchases_in + "</div><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'><button type='button' style='margin-left: 10px' class='add_to_cart btn btn-primary list_buttons'" + d.product_id + "'>Add to Cart</button></a>";}
+          return "<div class='item_bottles'>" + d.bottles + " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a>";}
         };
   
   show_stars = function(d) {
@@ -514,7 +467,7 @@ var show_product_list = function() {
 
 var 
 
-    sort_value = loadSelected("sort_choice", "value");
+  sort_value = loadSelected("sort_choice", "value");
   console.log("Sort = " + sort_value);
 
 if (sort_value === "bottles" || sort_value === "rating" || sort_value === "purchases_in" || sort_value === "purchase_date") 
@@ -550,7 +503,7 @@ else
 }
 
 var topProducts = [];
-for (i = 0 ; i < 10 ; i++) {
+for (i = 0 ; i < 60 ; i++) {
   topProducts.push(allProducts[i]);
 }
 
@@ -560,7 +513,7 @@ for (i = 0 ; i < 10 ; i++) {
 
     topProducts.forEach(function(d) { 
 
-  $('#product_list').append("<div class='row rec_row' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage +"' style='border-bottom: 1px solid gray;'><div class='col-sm-4 product-list-item'><h4>You Purchased</h4><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.product_id + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div><div class='col-sm-8 recs_container' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage +"'><h4>Similar Products to " + d.descriptionWithVintage + "</h4><div class='rec_container_" + d.product_id + "' data='" + d.product_id + "' data-title='" + d.descriptionWithVintage + "'></div></div></div><div class='row' style='padding-top: 10px;'><ul class='nav nav-list'><li class='divider'></li></ul></div>");
+  $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.product_id + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div>");
 
       var returnedProducts = [];
       var this_product_id = d.product_id;
@@ -575,50 +528,7 @@ for (i = 0 ; i < 10 ; i++) {
     var myApiKey = encodeURIComponent('fd89fba2959239b2'); 
     var myClientKey = encodeURIComponent('983968841cc325da');
 
-     //console.log(this_product_description + " " + this_product_id);
-     //console.log(this_strategy_description);
-
-    $.ajax('https://recs.richrelevance.com/rrserver/api/rrPlatform/recsUsingStrategy', {
-        data: {
-            apiClientKey: myClientKey,
-            apiKey: myApiKey,
-            userId: '1841734',
-            sessionId: '74ea5182-47e1-47e5-a305-238e2c4df806',
-            resultCount: 24,
-            // strategyName: 'SimilarProducts3',
-            //strategyName: "RecentlyPurchased3",
-            strategyName: "SimilarProducts3",
-            seed: this_product_id,
-            jsonp: true,
-            jcb: '?'
-        }, dataType: 'jsonp'
-     }).then(function(data) {
-        var items = data.recommendedProducts.map(function(item) {
-            item.regional_sku = 'REGIONAL_SKU';
-            item.highest_rating_publications_ini = "XX";
-            item.price = (''+item.priceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2');
-            item.sale_price = item.salePriceCents ? (''+item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
-            return item;
-        });
-
-
-    for (i=0 ; i<items.length ; i++)
-    {
-
-    var titleone = items[i].name;
-
-    // WHY DOESNT THIS WORK!!!  $('#recs_container_105748') or
-    // WHY DOESNT THIS WORK!!!  $('#' + attach_div) 
-       
-    attach_div_test = '.rec_container_' + '105748';
-    attach_div_fake = '.recs_container_105748';
-
-       //$(attach_div).append("<div class='rec_product'><a href='http://www.wine.com/v6/wine/" + items[i].id + "/Detail.aspx?s=wine_profile_recs&cid=wine_profile_recs' ><img class='rec_image' src='http://cache.wine.com/labels/" + items[i].id + "l.jpg'><span class='rec_title'>" + items[i].name + "</span></a><span class='rec_price'>" + items[i].sale_price + "</span><a class='more_info' style='font-size: 1.2em; margin-right: 10px; top:20px;' data='" + items[i].id +"' href='javascript:void(0);'>more info</a><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + items[i].id +"&s=wine_profile_rec_modal&cid=wine_profile_rec_modal' target='blank'><button class='add_to_cart btn btn-primary' style='margin-top: 10px;' data='" + items[i].id + "'>Add to Cart</button></div>");
-       $(attach_div).append("<div class='rec_product'><a href='http://www.wine.com/v6/wine/" + items[i].id + "/Detail.aspx?s=wine_profile_recs&cid=wine_profile_recs' ><img class='rec_image' src='http://cache.wine.com/labels/" + items[i].id + "l.jpg'><span class='rec_title'>" + items[i].name + "</span></a><span class='rec_price'>" + items[i].sale_price + "</span><button class='more_info btn' style='margin-top: 10px; margin-right: 10px' data='" + items[i].id +"' href='javascript:void(0);'>more...</button><a href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + items[i].id +"&s=wine_profile_rec_modal&cid=wine_profile_rec_modal' target='blank'><button class='add_to_cart btn btn-primary' style='margin-top: 10px;' data='" + items[i].id + "'>Add to Cart</button></a></div>");
-
-    }
     });
-      });
 
   }
 
@@ -673,7 +583,7 @@ for (i = 0 ; i < 10 ; i++) {
   });
   });
 
-show_product_list();
+  show_product_list();
 
   
   $('.filters').on("click", function() {
