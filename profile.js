@@ -175,12 +175,12 @@ var prices = [];
 /******************************************************
 * Step1: Create the dc.js chart objects & ling to div *
 ******************************************************/
-  var varietalChart = dc.pieChart("#varietalChart");
-  var regionChart = dc.pieChart("#regionChart");
-  var appellationChart = dc.pieChart("#appellationChart");
-  var priceChart = dc.pieChart("#priceChart");
-  var styleChart = dc.pieChart("#styleChart");
-  var typeChart = dc.pieChart("#typeChart");
+  var varietalChart = dc.rowChart("#varietalChart");
+  var regionChart = dc.rowChart("#regionChart");
+  var appellationChart = dc.rowChart("#appellationChart");
+  //var priceChart = dc.rowChart("#priceChart");
+  //var styleChart = dc.rowChart("#styleChart");
+  //var typeChart = dc.rowChart("#typeChart");
 
   // var dataTable = dc.dataTable("#product-table-graph");
 
@@ -275,7 +275,9 @@ customerDimension.filter(original_name_chosen);
 gift_personal = loadSelected("gift_personal","value");
 giftPersonalDimension.filter(gift_personal); 
 
-
+var chartMargins = {top: 0, left: 10, right: 30, bottom: 30}
+var chartWidth = 360;
+var chartHeight = 380;
 /****************************************
 *   Data Count Widget JS   *
 ****************************************/
@@ -286,122 +288,54 @@ giftPersonalDimension.filter(gift_personal);
    .dimension(facts)
    .group(all);
 
+  //region bar chart
+  regionChart.width(chartWidth)
+    .margins(chartMargins)
+    .height(chartHeight)
+    .transitionDuration(1500)
+    .dimension(regionDimension)
+    .group(regionGroup)
+    .ordering(function(d){return -d.value;})
+    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .elasticX(true)
+    .labelOffsetY(14)
+    .xAxis()
+    .ticks(6)
 
-var chartWidth = 245;
-var chartHeight = 245;
-var chartRadius = 120;
-var minAngleLabels = .3;
-var chartSlicesCap = 7;
+var xExtent = d3.extent(data, function(d) { return d.price; });
 
+varietalChart.width(chartWidth)
+    .margins(chartMargins)
+    .height(chartHeight)
+    .transitionDuration(1500)
+    .dimension(varietalDimension)
+    .group(varietalGroup)
+    .ordering(function(d){return -d.value;})
+    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .elasticX(true)
+    .labelOffsetY(16)
+    .xAxis().ticks(6);
 
-regionChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-        .dimension(regionDimension) // set dimension
-        .group(regionGroup) // set group
-        /* (optional) by default pie chart will use group.key as its label
-         * but you can overwrite it with a closure */
-        .ordering(function(d){return -d.value;})
-        /*
-        .label(function (d) {
-            if (regionChart.hasFilter() && !regionChart.hasFilter(d.key)) {
-                return d.key + '(0%)';
-            }
-            var label = d.key;
-            if (all.value()) {
-                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
-            }
-            return label;
-        }) 
-*/
-    .label(function (d) {
-            return d.key ;
-        })
-  .renderLabel(true)
-  .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap])
-  .on('postRedraw', function(regionChart) {
-   // runAjax();
-  })
-  ;
+  //varietal bar chart
+  appellationChart.width(chartWidth)
+    .margins(chartMargins)
+    .height(chartHeight)
+    .transitionDuration(1500)
+    .dimension(appellationDimension)
+    .group(appellationGroup)
+    .ordering(function(d){return -d.value;})
+    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .elasticX(true)
+    .labelOffsetY(16)
+    .xAxis().ticks(6);
 
-varietalChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-        .dimension(varietalDimension) // set dimension
-        .group(varietalGroup) // set group
-        
-        .ordering(function(d){return -d.value;})
-    .label(function (d) {
-            return d.key ;
-        })
-  .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap]);
-
-priceChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-        .dimension(priceBucketDimension) // set dimension
-        .group(priceBucketGroup) // set group
-        .ordering(function(d){return -d.value;})
-    .label(function (d) {
-            return d.key ;
-        })
-  .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap]);
-
-appellationChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-    .dimension(appellationDimension) // set dimension
-    .group(appellationGroup) // set group
-        .ordering(function(d){return -d.value;})
-        .label(function (d) {
-            return d.key ;
-        })
-  .renderLabel(true)  
-  .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap]);
-
-
-styleChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-    .dimension(styleDimension) // set dimension
-    .group(styleGroup) // set group
-        .ordering(function(d){return -d.value;})
-       .label(function (d) {
-            return d.key ;
-        })
-  .renderLabel(true)
-    .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap]);
-
-typeChart
-        .width(chartWidth) // (optional) define chart width, :default = 200
-        .height(chartHeight) // (optional) define chart height, :default = 200
-        .radius(chartRadius) // define pie radius
-    .dimension(typeDimension) // set dimension
-    .group(typeGroup) // set group
-        .ordering(function(d){return -d.value;})
-    .label(function (d) {
-            return d.key ;
-        })
-  .renderLabel(true)
-    .minAngleForLabel([minAngleLabels])
-  .slicesCap([chartSlicesCap])
-  .on('postRender',function(typeChart){
+  appellationChart.on('postRender',function(typeChart){
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
         $(".loader").fadeOut("slow");
     });
-  })
-  ;
+  });
+
 
 //sortable column headers by user 
   function sort_by_user(sortOrderChosen) {
@@ -443,9 +377,12 @@ $( ".table_metric" ).click(function() {
   show_correct_buttons = function(d) { 
 
     if (d.stock === 0) {
-          return    "<div class='item_stats'><div class='item_bottles'>" + d.bottles + " bottle(s) purchased </div></div>";} 
+          return    "<div class='item_stats'><div class='item_bottles'>" + d.bottles + 
+          " bottle(s) purchased </div></div>";} 
           else {
-          return "<div class='item_bottles'>" + d.bottles + " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a>";}
+          return "<div class='item_bottles'>" + d.bottles + 
+          " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" 
+          + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a>";}
         };
   
   show_stars = function(d) {

@@ -5,6 +5,7 @@
 ##Research
 
 **Using D3 and crossfilter in meteor**
+* D3 and word clouds to filter?
 * [DC JS meteor package] (https://atmospherejs.com/mrt/dc.js-package)
 * [Hackpad showing how to use dc without mongo in meteor](https://meteor.hackpad.com/Visualize-mongoDb-with-dcJs-Meteor-D0rvgO774Oo#:h=iv)-Issue)
 
