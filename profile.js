@@ -140,8 +140,8 @@ document.getElementById("all_count").innerHTML = customerProductCount;
   var moneyFormatDecimal = d3.format("$,.2f");
   
   data.forEach(function(d) { 
-    d.description   = d.description; 
-    d.productid  = +d.productid;
+  d.description   = d.description; 
+  d.productid  = +d.product_id;
   d.price = +d.price;
   d.customer_name = d.customer;
   d.score = +d.score;
@@ -382,7 +382,7 @@ $( ".table_metric" ).click(function() {
           else {
           return "<div class='item_bottles'>" + d.bottles + 
           " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" 
-          + d.product_id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a>";}
+          + d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a>";}
         };
   
   show_stars = function(d) {
@@ -439,8 +439,11 @@ else
   })
 }
 
+var numberofproducts = allProducts.length;
+var showthismany = Math.min(numberofproducts,60)
+
 var topProducts = [];
-for (i = 0 ; i < 60 ; i++) {
+for (i = 0 ; i < showthismany ; i++) {
   topProducts.push(allProducts[i]);
 }
 
@@ -450,7 +453,7 @@ for (i = 0 ; i < 60 ; i++) {
 
     topProducts.forEach(function(d) { 
 
-  $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.product_id + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.product_id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div>");
+  $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.productid + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div>");
 
       var returnedProducts = [];
       var this_product_id = d.product_id;
