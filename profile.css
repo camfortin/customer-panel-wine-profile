@@ -2,6 +2,8 @@
 padding-top: 80px;
 }
 
+.dc-chart g.row text {fill: #111;}
+
 .btn-primary 
 	{
 	    background-color:  #ce2c4b !important; 
@@ -17,8 +19,8 @@ padding-top: 80px;
 	} 
 
 
- .chart_slider {
-	height: 340px;
+ .OLDchart_slider {
+	height: 360px;
 	overflow-x: scroll;
 	white-space:nowrap;
 	width: 100%;
@@ -27,7 +29,6 @@ padding-top: 80px;
 
  .single_chart {
 		display: inline-block;
-		text-align: center;
 		margin: 5px;
 		white-space: normal;
 		width: 360px;
@@ -162,8 +163,7 @@ padding-top: 80px;
 
 	 vertical-align: center;
 	 margin: auto;
-	 width: 180px;
-	 max-width: 100%;
+
 	 max-height: 180px;
 	 min-height: 180px
 	}
