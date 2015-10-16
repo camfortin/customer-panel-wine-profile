@@ -7,8 +7,6 @@ else
 return text;
 }
 }
-
-
 /*
 if ($.cookie('modal_shown') == null) {
     $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
@@ -277,7 +275,10 @@ giftPersonalDimension.filter(gift_personal);
 
 var chartMargins = {top: 0, left: 10, right: 30, bottom: 30}
 var chartWidth = 360;
-var chartHeight = 380;
+var chartHeight = 350;
+var chartColor = "#999";
+var chartCap = 7;
+// wine red is #ce2c4b
 /****************************************
 *   Data Count Widget JS   *
 ****************************************/
@@ -296,11 +297,14 @@ var chartHeight = 380;
     .dimension(regionDimension)
     .group(regionGroup)
     .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .colors(d3.scale.ordinal().range([chartColor]))
     .elasticX(true)
     .labelOffsetY(14)
     .xAxis()
-    .ticks(6)
+    .ticks(6);
+
+  regionChart
+    .cap(chartCap);
 
 var xExtent = d3.extent(data, function(d) { return d.price; });
 
@@ -311,10 +315,13 @@ varietalChart.width(chartWidth)
     .dimension(varietalDimension)
     .group(varietalGroup)
     .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .colors(d3.scale.ordinal().range([chartColor]))
     .elasticX(true)
     .labelOffsetY(16)
     .xAxis().ticks(6);
+
+  varietalChart
+    .cap(chartCap);
 
   //varietal bar chart
   appellationChart.width(chartWidth)
@@ -324,10 +331,13 @@ varietalChart.width(chartWidth)
     .dimension(appellationDimension)
     .group(appellationGroup)
     .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range(["#3182bd"]))
+    .colors(d3.scale.ordinal().range([chartColor]))
     .elasticX(true)
     .labelOffsetY(16)
     .xAxis().ticks(6);
+
+  appellationChart
+    .cap(chartCap);
 
   appellationChart.on('postRender',function(typeChart){
     // smooth the rendering through event throttling
