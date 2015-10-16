@@ -6,19 +6,17 @@ function substringFormat(text) {
     }
 }
 
-var dataOut;
+var recsObject = {};
+recsObject.myApiKey = encodeURIComponent('fd89fba2959239b2');
+recsObject.myClientKey = encodeURIComponent('983968841cc325da');
 
 function getRecs(this_strategy_description, this_product_id) {
     //var dataOut;
-    var items;
-    var myApiKey = encodeURIComponent('fd89fba2959239b2');
-
-    var myClientKey = encodeURIComponent('983968841cc325da');
 
     $.ajax('https://recs.richrelevance.com/rrserver/api/rrPlatform/recsForPlacements', {
         data: {
-            apiClientKey: myClientKey,
-            apiKey: myApiKey,
+            apiClientKey: recsObject.myClientKey,
+            apiKey: recsObject.myApiKey,
             userId: '1841734',
             sessionId: '74ea5182-47e1-47e5-a305-238e2c4df806',
             resultCount: 24,
@@ -31,18 +29,16 @@ function getRecs(this_strategy_description, this_product_id) {
         dataType: 'json'
     }).then(function(data) {
         //console.log(data);
-        items = data.placements[0].recommendedProducts.map(function(item) {
+        recsObject.items = data.placements[0].recommendedProducts.map(function(item) {
             item.regional_sku = 'REGIONAL_SKU';
             item.highest_rating_publications_ini = "XX";
             item.price = ('' + item.priceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2');
             item.sale_price = item.salePriceCents ? ('' + item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
             return item;
         });
-        data.placements[0].recommendedProducts = items;
-        dataOut = data;
-    }).done(function() {
-        console.log(dataOut);
-        return dataOut;
+        data.placements[0].recommendedProducts = recsObject.items;
+        recsObject.dataOut = data;
+        return recsObject;
     });
 }
 
@@ -441,10 +437,10 @@ varietalChart.width(chartWidth)
 
         if (d.stock === 0) {
             return "<div class='item_stats'><div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased </div></div><div class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</div>";
+                " bottle(s) purchased </div></div><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
         } else {
             return "<div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a><div class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</div>";
+                " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
         }
     };
 
@@ -579,7 +575,9 @@ varietalChart.width(chartWidth)
     show_product_list();
 
     $('.get_recs_button').on('click', function() {
-
+      recsObject.productIdInput = $(this).data('productid');
+      getRecs('SimilarProducts3',recsObject.productIdInput);
+      console.log(recsObject.dataOut.placements[0].strategyMessage);
     })
 
     $('.filters').on("click", function() {
