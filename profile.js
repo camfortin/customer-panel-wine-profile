@@ -38,8 +38,22 @@ function getRecs(this_strategy_description, this_product_id) {
         });
         data.placements[0].recommendedProducts = recsObject.items;
         recsObject.dataOut = data;
-        return recsObject;
+        console.log(recsObject.dataOut.placements[0].strategyMessage);
+ 
+        recommendations = recsObject.dataOut.placements[0].recommendedProducts; 
+
+        recommendations.forEach(function(d) {
+            $('.recsList').append('<ul>' + d.name + '</ul>');
+            console.log(d);
+        });
+
+        $('#recsModal').modal();
+
+        //console.log(recommendations);   
+        //return recsObject;
     });
+
+
 }
 
 
@@ -309,86 +323,115 @@ d3.csv("products_customer_internal.csv", function(data) {
     }
 
 
-/*
-original_name_chosen = loadSelected("customer_choice","value");
-customerDimension.filter(original_name_chosen); 
-*/
+    /*
+    original_name_chosen = loadSelected("customer_choice","value");
+    customerDimension.filter(original_name_chosen); 
+    */
 
-gift_personal = loadSelected("gift_personal","value");
-giftPersonalDimension.filter(gift_personal); 
+    gift_personal = loadSelected("gift_personal", "value");
+    giftPersonalDimension.filter(gift_personal);
 
-var chartMargins = {top: 0, left: 10, right: 30, bottom: 30}
-var chartWidth = 360;
-var chartHeight = 350;
-var chartColor = "#999";
-var chartCap = 7;
-// wine red is #ce2c4b
-/****************************************
-*   Data Count Widget JS   *
-****************************************/
+    var chartMargins = {
+        top: 0,
+        left: 10,
+        right: 30,
+        bottom: 30
+    }
+    var chartWidth = 360;
+    var chartHeight = 350;
+    var chartColor = "#3182BD";
+    var chartCap = 7;
+    var labelOffset = 23;
+    // wine red is #ce2c4b
+    /****************************************
+     *   Data Count Widget JS   *
+     ****************************************/
 
-  var all = facts.groupAll();
+    var all = facts.groupAll();
 
-  dc.dataCount(".dc-data-count")
-   .dimension(facts)
-   .group(all);
+    dc.dataCount(".dc-data-count")
+        .dimension(facts)
+        .group(all);
 
-  //region bar chart
-  regionChart.width(chartWidth)
-    .margins(chartMargins)
-    .height(chartHeight)
-    .transitionDuration(1500)
-    .dimension(regionDimension)
-    .group(regionGroup)
-    .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range([chartColor]))
-    .elasticX(true)
-    .labelOffsetY(14)
-    .xAxis()
-    .ticks(6);
+    //region bar chart
+    regionChart.width(chartWidth)
+        .margins(chartMargins)
+        .height(chartHeight)
+        .transitionDuration(1500)
+        .dimension(regionDimension)
+        .group(regionGroup)
+        .ordering(function(d) {
+            return -d.value;
+        })
+        .colors(d3.scale.ordinal().range([chartColor]))
+        .elasticX(true)
+        .labelOffsetY(labelOffset)
+        .xAxis()
+        .ticks(6);
 
-  regionChart
-    .cap(chartCap);
+    regionChart
+        .label(function(d) {
+            return d.key + " (" + d3.format('.0f')(d.value) + ")";
+        });
 
-var xExtent = d3.extent(data, function(d) { return d.price; });
+    regionChart
+        .cap(chartCap);
 
-varietalChart.width(chartWidth)
-    .margins(chartMargins)
-    .height(chartHeight)
-    .transitionDuration(1500)
-    .dimension(varietalDimension)
-    .group(varietalGroup)
-    .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range([chartColor]))
-    .elasticX(true)
-    .labelOffsetY(16)
-    .xAxis().ticks(6);
-
-  varietalChart
-    .cap(chartCap);
-
-  //varietal bar chart
-  appellationChart.width(chartWidth)
-    .margins(chartMargins)
-    .height(chartHeight)
-    .transitionDuration(1500)
-    .dimension(appellationDimension)
-    .group(appellationGroup)
-    .ordering(function(d){return -d.value;})
-    .colors(d3.scale.ordinal().range([chartColor]))
-    .elasticX(true)
-    .labelOffsetY(16)
-    .xAxis().ticks(6);
-
-  appellationChart
-    .cap(chartCap);
-
-  appellationChart.on('postRender',function(typeChart){
-    // smooth the rendering through event throttling
-    dc.events.trigger(function(){
-        $(".loader").fadeOut("slow");
+    var xExtent = d3.extent(data, function(d) {
+        return d.price;
     });
-  });
+
+    varietalChart.width(chartWidth)
+        .margins(chartMargins)
+        .height(chartHeight)
+        .transitionDuration(1500)
+        .dimension(varietalDimension)
+        .group(varietalGroup)
+        .ordering(function(d) {
+            return -d.value;
+        })
+        .colors(d3.scale.ordinal().range([chartColor]))
+        .elasticX(true)
+        .labelOffsetY(labelOffset)
+        .xAxis().ticks(6);
+
+    varietalChart
+        .cap(chartCap);
+
+    varietalChart
+        .label(function(d) {
+            return d.key + " (" + d3.format('.0f')(d.value) + ")";
+        });
+
+    //varietal bar chart
+    appellationChart.width(chartWidth)
+        .margins(chartMargins)
+        .height(chartHeight)
+        .transitionDuration(1500)
+        .dimension(appellationDimension)
+        .group(appellationGroup)
+        .ordering(function(d) {
+            return -d.value;
+        })
+        .colors(d3.scale.ordinal().range([chartColor]))
+        .elasticX(true)
+        .labelOffsetY(labelOffset)
+        .xAxis().ticks(6);
+
+    appellationChart
+        .cap(chartCap);
+
+    appellationChart
+        .label(function(d) {
+            return d.key + " (" + d3.format('.0f')(d.value) + ")";
+        });
+
+    appellationChart.on('postRender', function(typeChart) {
+        // smooth the rendering through event throttling
+        dc.events.trigger(function() {
+            $(".loader").fadeOut("slow");
+        });
+    });
 
 
     //sortable column headers by user 
@@ -575,9 +618,10 @@ varietalChart.width(chartWidth)
     show_product_list();
 
     $('.get_recs_button').on('click', function() {
-      recsObject.productIdInput = $(this).data('productid');
-      getRecs('SimilarProducts3',recsObject.productIdInput);
-      console.log(recsObject.dataOut.placements[0].strategyMessage);
+        recsObject.items = {};
+        recsObject.productIdInput = $(this).data('productid');
+        getRecs('SimilarProducts3', recsObject.productIdInput);
+        //console.log(recsObject.dataOut.placements[0].strategyMessage);
     })
 
     $('.filters').on("click", function() {

@@ -2,7 +2,11 @@
 padding-top: 80px;
 }
 
-.dc-chart g.row text {fill: #111;}
+.dc-chart g.row text {
+	fill: #111;
+	font-size: 16px;
+
+}
 
 .btn-primary 
 	{
