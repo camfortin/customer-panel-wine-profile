@@ -55,6 +55,8 @@ function getRecs(this_strategy_description, this_product_id) {
 
             recommendations = recsObject.dataOut.placements[0].recommendedProducts;
 
+            shuffle(recommendations);
+
             var numberofproducts = recommendations.length;
             var showthismany = Math.min(numberofproducts, 5)
 
@@ -63,8 +65,6 @@ function getRecs(this_strategy_description, this_product_id) {
             for (i = 0; i < showthismany; i++) {
                 topRecs.push(recommendations[i]);
             }
-
-            shuffle(topRecs);
 
             $('#recsModalLabel').html(strategyMessage);
             $('.recsList').html("");
@@ -232,7 +232,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         d.bottles = +d.bottles;
         d.giftStatus = d.giftstatus;
         d.stock = +d.stock;
-        d.purchase_date = +d.lastPurchaseDate;
+        d.purchase_date = +d.lastorderdate;
     });
 
 
