@@ -1,10 +1,3 @@
-function substringFormat(text) {
-    if (text.length > 70) {
-        return text.substring(0, 70) + "...";
-    } else {
-        return text;
-    }
-}
 
 var recsObject = {};
 recsObject.myApiKey = encodeURIComponent('fd89fba2959239b2');
@@ -23,7 +16,7 @@ function getRecs(this_strategy_description, this_product_id) {
             // strategyName: 'SimilarProducts3',
             //strategyName: "RecentlyPurchased3",
             placements: "item_page.Profile1",
-            strategySet: this_strategy_description + "\|productViewedViewed",
+            strategySet: "\|microgenres" + "\|similarproducts" + "\|PurchaseEV" + "\|appellation_varietal_mostpurchased" + "\|productViewedViewed",
             productId: this_product_id
         },
         dataType: 'json'
@@ -38,13 +31,26 @@ function getRecs(this_strategy_description, this_product_id) {
         });
         data.placements[0].recommendedProducts = recsObject.items;
         recsObject.dataOut = data;
-        console.log(recsObject.dataOut.placements[0].strategyMessage);
- 
+        var strategyMessage = recsObject.dataOut.placements[0].strategyMessage;
+
         recommendations = recsObject.dataOut.placements[0].recommendedProducts; 
 
-        recommendations.forEach(function(d) {
+        var ordering = [1,2,3,4,5];
+
+        var numberofproducts = recommendations.length;
+        var showthismany = Math.min(numberofproducts, 3)
+
+        var topRecs = [];
+
+        for (i = 0; i < showthismany; i++) {
+            topRecs.push(recommendations[i]);
+        }
+
+        $('#recsModalLabel').html(strategyMessage);
+
+        topRecs.forEach(function(d) {
             $('.recsList').append('<ul>' + d.name + '</ul>');
-            console.log(d);
+
         });
 
         $('#recsModal').modal();
@@ -335,7 +341,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         top: 0,
         left: 10,
         right: 30,
-        bottom: 30
+        bottom: -2
     }
     var chartWidth = 360;
     var chartHeight = 350;
@@ -367,7 +373,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         .elasticX(true)
         .labelOffsetY(labelOffset)
         .xAxis()
-        .ticks(6);
+        .ticks(0).outerTickSize(0);
 
     regionChart
         .label(function(d) {
@@ -393,7 +399,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         .colors(d3.scale.ordinal().range([chartColor]))
         .elasticX(true)
         .labelOffsetY(labelOffset)
-        .xAxis().ticks(6);
+        .xAxis().ticks(0).outerTickSize(0);
 
     varietalChart
         .cap(chartCap);
@@ -416,7 +422,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         .colors(d3.scale.ordinal().range([chartColor]))
         .elasticX(true)
         .labelOffsetY(labelOffset)
-        .xAxis().ticks(6);
+        .xAxis().ticks(0).outerTickSize(0);
 
     appellationChart
         .cap(chartCap);
