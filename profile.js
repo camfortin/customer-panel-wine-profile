@@ -1,3 +1,22 @@
+function shuffle(array) {
+    var currentIndex = array.length,
+        temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
 
 var recsObject = {};
 recsObject.myApiKey = encodeURIComponent('fd89fba2959239b2');
@@ -16,42 +35,49 @@ function getRecs(this_strategy_description, this_product_id) {
             // strategyName: 'SimilarProducts3',
             //strategyName: "RecentlyPurchased3",
             placements: "item_page.Profile1",
-            strategySet: "\|microgenres" + "\|similarproducts" + "\|PurchaseEV" + "\|appellation_varietal_mostpurchased" + "\|productViewedViewed",
+            strategySet: "\|microgenres" + "\|similarproducts" + "\|appellation_varietal_mostpurchased" + "\|PurchaseEV" + "\|productViewedViewed",
             productId: this_product_id
         },
         dataType: 'json'
     }).then(function(data) {
         //console.log(data);
-        recsObject.items = data.placements[0].recommendedProducts.map(function(item) {
-            item.regional_sku = 'REGIONAL_SKU';
-            item.highest_rating_publications_ini = "XX";
-            item.price = ('' + item.priceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2');
-            item.sale_price = item.salePriceCents ? ('' + item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
-            return item;
-        });
-        data.placements[0].recommendedProducts = recsObject.items;
-        recsObject.dataOut = data;
-        var strategyMessage = recsObject.dataOut.placements[0].strategyMessage;
+        if (data.placements !== undefined) {
+            recsObject.items = data.placements[0].recommendedProducts.map(function(item) {
+                item.regional_sku = 'REGIONAL_SKU';
+                item.highest_rating_publications_ini = "XX";
+                item.price = ('' + item.priceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2');
+                item.sale_price = item.salePriceCents ? ('' + item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
+                return item;
+            });
+            data.placements[0].recommendedProducts = recsObject.items;
+            recsObject.dataOut = data;
+            var strategyMessage = recsObject.dataOut.placements[0].strategyMessage;
 
-        recommendations = recsObject.dataOut.placements[0].recommendedProducts; 
+            recommendations = recsObject.dataOut.placements[0].recommendedProducts;
 
-        var ordering = [1,2,3,4,5];
+            var numberofproducts = recommendations.length;
+            var showthismany = Math.min(numberofproducts, 5)
 
-        var numberofproducts = recommendations.length;
-        var showthismany = Math.min(numberofproducts, 3)
+            var topRecs = [];
 
-        var topRecs = [];
+            for (i = 0; i < showthismany; i++) {
+                topRecs.push(recommendations[i]);
+            }
 
-        for (i = 0; i < showthismany; i++) {
-            topRecs.push(recommendations[i]);
+            shuffle(topRecs);
+
+            $('#recsModalLabel').html(strategyMessage);
+            $('.recsList').html("");
+
+            topRecs.forEach(function(d) {
+                $('.recsList').append('<li>' + d.name + '</li>');
+
+            });
+        } else {
+            $('#recsModalLabel').html("Sorry");
+            $('.recsList').html("");
+            $('.recsList').append('<li>No recs at this time</li>');
         }
-
-        $('#recsModalLabel').html(strategyMessage);
-
-        topRecs.forEach(function(d) {
-            $('.recsList').append('<ul>' + d.name + '</ul>');
-
-        });
 
         $('#recsModal').modal();
 
