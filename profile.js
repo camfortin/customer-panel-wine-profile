@@ -508,15 +508,31 @@ d3.csv("products_customer_internal.csv", function(data) {
     }
     console.log(sort_metric);
 
-    show_correct_buttons = function(d) {
+    show_history = function(d) {
+        return "<div class='item_bottles'>" + d.bottles +
+                " bottle(s) purchased</div>";
+    }
 
-        if (d.stock === 0) {
-            return "<div class='item_stats'><div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased </div></div><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
-        } else {
-            return "<div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
+    show_add_to_cart = function(d) {
+
+        if (d.stock !== 0) {
+            return "<a class='action_link' " + 
+                "href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + 
+                d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>" + 
+                "Add to Cart</a>";
+        } else
+        {
+            return ""
         }
+    };
+
+    show_action_buttons = function(d) {
+
+        return "<div class='product_action_links'><a class='more_info' id='get_info_" +
+            d.productid + "' data=" + d.productid + ">Quick View</a> | " + 
+            "<a class='get_recs_button' id='get_recs_button_" +
+            d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>"
+
     };
 
     show_stars = function(d) {
@@ -534,10 +550,7 @@ d3.csv("products_customer_internal.csv", function(data) {
 
     var show_product_list = function() {
 
-
-
         var
-
             sort_value = loadSelected("sort_choice", "value");
         console.log("Sort = " + sort_value);
 
@@ -577,7 +590,15 @@ d3.csv("products_customer_internal.csv", function(data) {
 
         topProducts.forEach(function(d) {
 
-            $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.productid + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div>");
+            $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + 
+                d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" +
+                "<image class='list_image' src='http://cache2.wine.com/labels/" + d.productid + 
+                "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + 
+                d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + 
+                d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + 
+                "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" 
+                + show_stars(d) + "</div><div>" + show_history(d) + show_add_to_cart(d) + show_action_buttons(d) +
+                 " </div></div>");
 
             var returnedProducts = [];
             var this_product_id = d.product_id;
@@ -626,9 +647,9 @@ d3.csv("products_customer_internal.csv", function(data) {
 
             if (Longitude !== -360) {
 
-                $('.modal-body').html("<div class='row' style='background-color:white; padding:10px;'>" + small_label + product_info + modal_description + "</div><div class='row' style='background-color:white; padding:10px';'><iframe width='250' height='250' frameborder='0' style='border:0; float: right; display: inline-block;' src='https://www.google.com/maps/embed/v1/place?q=" + Latitude + "%20" + Longitude + "&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q&zoom=14&maptype=satellite'></iframe></div>");
+                $('.modal-body-product').html("<div class='row' style='background-color:white; padding:10px;'>" + small_label + product_info + modal_description + "</div><div class='row' style='background-color:white; padding:10px';'><iframe width='250' height='250' frameborder='0' style='border:0; float: right; display: inline-block;' src='https://www.google.com/maps/embed/v1/place?q=" + Latitude + "%20" + Longitude + "&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q&zoom=8&maptype=satellite'></iframe></div>");
             } else {
-                $('.modal-body').html("<div>" + small_label + product_info + modal_description + "</div>");
+                $('.modal-body-product').html("<div>" + small_label + product_info + modal_description + "</div>");
             }
 
             $('.modal-title').html(prod_name);
@@ -649,7 +670,6 @@ d3.csv("products_customer_internal.csv", function(data) {
 
     show_product_list();
 
-
     $('body').on('click', '.get_recs_button', function() { 
         recsObject.items = {};
         recsObject.productIdInput = $(this).data('productid');
@@ -662,9 +682,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         show_product_list();
         //runAjax();
 
-
     });
-
 
     /****************************
      * Step6: Render the Charts  *
