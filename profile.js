@@ -649,12 +649,13 @@ d3.csv("products_customer_internal.csv", function(data) {
 
     show_product_list();
 
-    $('.get_recs_button').on('click', function() {
+
+    $('body').on('click', '.get_recs_button', function() { 
         recsObject.items = {};
         recsObject.productIdInput = $(this).data('productid');
         getRecs('SimilarProducts3', recsObject.productIdInput);
-        //console.log(recsObject.dataOut.placements[0].strategyMessage);
-    })
+    });
+
 
     $('.filters').on("click", function() {
 
