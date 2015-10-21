@@ -48,3 +48,46 @@ function shuffle(array) {
 
   return array;
 }
+
+function loadSelected(domID,valueOrText) {
+  if(valueOrText == "value") {
+    return document.getElementById(domID).options[document.getElementById(domID).selectedIndex].value;
+  }
+  else {
+    return document.getElementById(domID).options[document.getElementById(domID).selectedIndex].innerHTML;
+  }
+}
+
+function listSlicers(elementId) {
+  var slicerArray = [];
+  var slicerNameArray = ['gift_personal','mostRecentPurchaseYear',];
+  var chartNameArray = ['varietalChart','regionChart','appellationChart']
+  var currentSlicer;
+  var currentChart;
+  for(i=0;i<slicerNameArray.length;i++) {
+    currentSlicer = loadSelected(slicerNameArray[i],'text');
+    if(currentSlicer != '-') {
+      slicerArray.push(currentSlicer);
+    }
+  }
+  for(i=0;i<chartNameArray.length;i++) {
+    currentChart = eval(chartNameArray[i]);
+    currentChartTitle = toTitleCase(chartNameArray[i].replace('Chart',''));
+    if(currentChart.filter() != null) {
+      slicerArray.push(currentChartTitle + ' (' + currentChart.filters().join(',') + ')');
+    }
+  }
+  document.getElementById(elementId).innerHTML = slicerArray.join(', ');
+  console.log('Current Slicers: ' + document.getElementById(elementId).innerHTML);
+}
+
+function listSlicersForAllElements() {
+  var spanIds = ['slicerList'];
+  for(j=0;j<spanIds.length;j++) {
+    listSlicers(spanIds[j]);
+  }
+}
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}

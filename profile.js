@@ -149,6 +149,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         dc.filterAll();
         dc.redrawAll();
         runAjax();
+        listSlicersForAllElements();
     });
 
     var customerSelected = getParameterByName('customer');
@@ -256,9 +257,9 @@ d3.csv("products_customer_internal.csv", function(data) {
     /******************************************************
      * Step1: Create the dc.js chart objects & ling to div *
      ******************************************************/
-    var varietalChart = dc.rowChart("#varietalChart");
-    var regionChart = dc.rowChart("#regionChart");
-    var appellationChart = dc.rowChart("#appellationChart");
+    window.varietalChart = dc.rowChart("#varietalChart");
+    window.regionChart = dc.rowChart("#regionChart");
+    window.appellationChart = dc.rowChart("#appellationChart");
     //var priceChart = dc.rowChart("#priceChart");
     //var styleChart = dc.rowChart("#styleChart");
     //var typeChart = dc.rowChart("#typeChart");
@@ -458,12 +459,16 @@ d3.csv("products_customer_internal.csv", function(data) {
             return d.key + " (" + d3.format('.0f')(d.value) + ")";
         });
 
-    appellationChart.on('postRender', function(typeChart) {
-        // smooth the rendering through event throttling
-        dc.events.trigger(function() {
-            $(".loader").fadeOut("slow");
+    appellationChart
+        .on('postRender', function(typeChart) {
+            dc.events.trigger(function() {
+                $(".loader").fadeOut("slow");
+            });
+            listSlicersForAllElements();
+        })
+        .on('preRedraw',function(appellationChart) {
+            listSlicersForAllElements();
         });
-    });
 
 
     //sortable column headers by user 
