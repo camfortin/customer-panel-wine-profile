@@ -2,6 +2,13 @@
 padding-top: 55px;
 }
 
+#slicerList {
+	color: blue;
+	font-size: 14px;
+	margin-top: 10px;
+	display: block;
+} 
+
 .dc-chart g.row text {
 	fill: #111;
 	font-size: 16px;
