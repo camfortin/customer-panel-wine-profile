@@ -84,10 +84,10 @@ function getRecs(this_strategy_description, this_product_id) {
         //console.log(recommendations);   
         //return recsObject;
     });
-
-
 }
 
+var customerSelected = getParameterByName('customer');
+console.log(customerSelected);
 
 /*
 if ($.cookie('modal_shown') == null) {
@@ -100,18 +100,13 @@ if ($.cookie('modal_shown') == null) {
  * Step0: Load data  *
  **********************************/
 // load data from a csv file
-d3.csv("products_customer_internal2.csv", function(data) {
+d3.json("https://api.richrelevance.com/api/v1/datamesh/apis/fd89fba2959239b2/Cust_Purch_API?customerid=" + customerSelected, function(data) {
 
     //getting the product count for just the customer selected and insertign into DOM
     //customer_name_chosen = loadSelected("customer_choice","value"),
     //customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length;
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results === null ? "Cam F" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
 
+console.log(data);
     $('#hide_bad_ratings').click(function() {
         if (document.getElementById('hide_bad_ratings').checked) {
             ratingDimension.filterFunction(function(d) {
@@ -162,20 +157,19 @@ d3.csv("products_customer_internal2.csv", function(data) {
         listSlicersForAllElements();
     });
 
-    var customerSelected = getParameterByName('customer');
+    
     console.log(customerSelected);
 
 
     //Filter for a name before loading into crossfilter
-    var data2 = data.filter(function(d, i) {
-        return d.customer == customerSelected;
-    });
+    var data2 = data.filter(function (d) {return d.class === 'Red Wines' || d.class === 'White Wines' || d.class === 'Champagne & Sparkling'});
+    var customerNameFromData = data2[0].customer;
     //var priceFilter = data.filter(function(d, i) { return d.price < 20; });
     //var regionVarietalCombo = data.filter(function(d, i) { return d.varietal + ' ' + d.appellation == 'Cabernet Sauvignon Argentina' ; });
 
     //////////// 2015-10-13 ML
     //populate dropdowns with only available slices for the current customer
-    document.getElementById('customerName').innerHTML = customerSelected + "'s ";
+    document.getElementById('customerName').innerHTML = customerNameFromData + "'s ";
     //populateDropdown(data2, 'MostRecentPurchaseYear', 'mostRecentPurchaseYear', '', 'All', 1, 'All Time');
     //populateDropdown(data2, 'giftstatus', 'gift_personal', ' Purchases', 'Personal', 0, '');
 
@@ -232,7 +226,8 @@ d3.csv("products_customer_internal2.csv", function(data) {
     var moneyFormatDecimal = d3.format("$,.2f");
 
     data.forEach(function(d) {
-        d.description = d.description;
+        d.description = d.descriptionwithvintage;
+        d.descriptionWithVintage = d.description;
         d.productid = +d.product_id;
         d.price = +d.price;
         d.customer_name = d.customer;
@@ -252,6 +247,8 @@ d3.csv("products_customer_internal2.csv", function(data) {
     data2.forEach(function(d) {
         prices.push(d.price);
     });
+
+    console.log(prices);
 
     var total_price = prices.reduce(function(a, b) {
         return a + b;
