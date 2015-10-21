@@ -60,16 +60,16 @@ function loadSelected(domID,valueOrText) {
 
 function listSlicers(elementId) {
   var slicerArray = [];
-  var slicerNameArray = ['gift_personal','mostRecentPurchaseYear',];
+  //var slicerNameArray = ['gift_personal','mostRecentPurchaseYear',];
   var chartNameArray = ['varietalChart','regionChart','appellationChart']
-  var currentSlicer;
+  //var currentSlicer;
   var currentChart;
-  for(i=0;i<slicerNameArray.length;i++) {
+  /*for(i=0;i<slicerNameArray.length;i++) {
     currentSlicer = loadSelected(slicerNameArray[i],'text');
     if(currentSlicer != '-') {
       slicerArray.push(currentSlicer);
     }
-  }
+  }*/
   for(i=0;i<chartNameArray.length;i++) {
     currentChart = eval(chartNameArray[i]);
     currentChartTitle = toTitleCase(chartNameArray[i].replace('Chart',''));
