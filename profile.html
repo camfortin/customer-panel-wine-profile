@@ -37,28 +37,24 @@
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
           </button>
-          <h1 class='navbar-brand'><span id='customerName'>'s </span>Profile (beta) <a style='font-size: .8em; color:#303239; font-color:#ce2c4b ; margin-top: 15px'  id="feedback_link" href="mailto:cfortin@wine.com?subject=Wine Profile Feedback"><span class="glyphicon glyphicon-envelope" style='font-size: 1.4em; top: 5px;'></span></a></h1>
+          <h1 class="navbar-brand profile_title"><span id='customerName'>'s </span>Profile (beta)</h1>
+          
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right" style='padding-right:10px'>
-            <li>
-            	<select class="dropdown dropdownwide"  id="gift_personal" style='margin-top: 35px; margin-right: 5px;'>	
-	  			</select></li>
-            <li>	  
-            	<select class="dropdown dropdownskinny" id="mostRecentPurchaseYear" style='margin-top: 35px; margin-right: 5px;'>
-	  			</select>
-	  		</li>
-	  		<li style="font-size:1.3em ; margin-top: 35px; margin-right: 5px" class="hide_bad_ratings_li"><input type="checkbox" value="hide_bad_ratings" id="hide_bad_ratings">4+ Star Rated Only</li>
-	  		<li style="font-size:1.3em; margin-top: 35px; margin-right:5px"><input type="checkbox" value="hide_oos_check" id="hide_oos_check" checked>Include Out Of Stock</li>
-	  		<li style='margin-top: 15px; margin-left: 15px;'><span class='dc-data-count main_count'>
-					<span class="filter-count"></span> out of <span id="all_count" class="customer_total"></span><button class="btn btn-info main_count_link reset_me" style='margin-left:10px'>Reset</button>
-		
-				</span>
-			</li>
+            <li class="filter_nav show_gifts"><input type="checkbox" value="show_gifts" id="show_gifts">Include Gifts</li>
+    	  		<li class="filter_nav hide_bad_ratings_li"><input type="checkbox" value="hide_bad_ratings" id="hide_bad_ratings">3+ Rated Only</li>
+    	  		<li class="filter_nav"><input type="checkbox" value="hide_oos_check" id="hide_oos_check" checked>Show Sold Out</li>
+    	  		<li class="filter_nav">
+                  <span class='dc-data-count main_count'>
+                  <span class="filter-count"></span> out of <span id="all_count" class="customer_total"></span>
+                  <a class="main_count_link reset_me" style='margin-left:10px'>Reset</a>
+                  </span>   
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -68,9 +64,9 @@
     <div class='handletest col-lg-12'>
       
     </div>
-		<div class='col-lg-8'><h4>Wine You've Purchased</h4></div>
-		<div class='col-lg-4'><span style='font-size:1.3em'>Sort By: </span>
-		  	<select class="dropdown dropdownwide dropdown-menu-right" id="sort_choice">	
+
+		<div class='col-md-12'>
+		  	<select class="dropdown dropdownwide dropdown-menu-right pull-right" style='margin-right: 15px' id="sort_choice">	
 		  		<option value="purchase_date"  selected="selected">Purchase Date</option>
 		  		<option value="purchases_in">Times Purchased</option>
 		  		<option value="rating">Your Rating</option>
@@ -78,14 +74,15 @@
 		  		<option value="price">Price low to high</option>
 		  		<option value="description">A-Z</option>
 		  	</select>
+
 		 </div>	
 	</div>
 	
 	<div class='row chart_slider filters' id='filters'>	
 		
-		<div class='single_chart' id="varietalChart"><h3>Varietal</h3></div>
-		<div class='single_chart' id="regionChart"><h3>Region</h3></div>
-		<div class='single_chart' id="appellationChart"><h3>Appellation</h3></div>
+		<div class='single_chart' id="varietalChart"><h4>Varietal</h3></div>
+		<div class='single_chart' id="regionChart"><h4>Region</h4></div>
+		<div class='single_chart' id="appellationChart"><h4>Appellation</h4></div>
 
   </div>
 
