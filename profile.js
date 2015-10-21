@@ -169,7 +169,7 @@ console.log(data);
 
     //////////// 2015-10-13 ML
     //populate dropdowns with only available slices for the current customer
-    document.getElementById('customerName').innerHTML = customerNameFromData + "'s ";
+    document.getElementById('customerName').innerHTML = toTitleCase(customerNameFromData) + "'s ";
     //populateDropdown(data2, 'MostRecentPurchaseYear', 'mostRecentPurchaseYear', '', 'All', 1, 'All Time');
     //populateDropdown(data2, 'giftstatus', 'gift_personal', ' Purchases', 'Personal', 0, '');
 
