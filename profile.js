@@ -688,7 +688,7 @@ d3.csv("products_customer_internal2.csv", function(data) {
     });
 
 
-    $('.navbar-fixed-top').on("click", function() {
+    $('.filters').on("click", function() {
 
         show_product_list();
         //runAjax();
