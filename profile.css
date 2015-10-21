@@ -1,11 +1,38 @@
  body {
-padding-top: 80px;
+padding-top: 55px;
 }
+
+#slicerList {
+	color: blue;
+	font-size: 14px;
+	margin-top: 10px;
+	display: block;
+} 
 
 .dc-chart g.row text {
 	fill: #111;
 	font-size: 16px;
 
+}
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:4px !important; 
+    padding-bottom:0 !important;
+    height: 23px;
+}
+.navbar {min-height:23px !important;}
+
+#feedback_link {
+	float: left;
+}
+
+.filter_nav {
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.filter_nav input {
+	margin-top: 15px;
 }
 
 .btn-primary 
@@ -39,9 +66,18 @@ padding-top: 80px;
 		float: none !important;
 	}
 
+.modal-body-product {
+	font-size: 16px;
+}
+
+.modal-body-product p {
+	font-size: 16px !important;
+}
+
+
   .product-list-item {
 		text-align: center;
-		height: 420px;
+		min-height: 440px;
 		padding-bottom: 10px;
 		padding-top: 30px;
         border-top: 1px solid #999;
@@ -218,6 +254,11 @@ padding-top: 80px;
 
 	a {
     cursor: pointer;
+	}
+
+	.product_action_links {
+		font-size: 16px;
+		padding-top: 10px;
 	}
 
 	#slicerList {

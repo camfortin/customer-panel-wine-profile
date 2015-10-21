@@ -100,7 +100,7 @@ if ($.cookie('modal_shown') == null) {
  * Step0: Load data  *
  **********************************/
 // load data from a csv file
-d3.csv("products_customer_internal.csv", function(data) {
+d3.csv("products_customer_internal2.csv", function(data) {
 
     //getting the product count for just the customer selected and insertign into DOM
     //customer_name_chosen = loadSelected("customer_choice","value"),
@@ -115,11 +115,21 @@ d3.csv("products_customer_internal.csv", function(data) {
     $('#hide_bad_ratings').click(function() {
         if (document.getElementById('hide_bad_ratings').checked) {
             ratingDimension.filterFunction(function(d) {
-                return d > 3;
+                return d > 2.5;
             });
             dc.redrawAll();
         } else {
             ratingDimension.filterAll();
+            dc.redrawAll();
+        }
+    })
+
+    $('#show_gifts').click(function() {
+        if (document.getElementById('show_gifts').checked) {
+            giftPersonalDimension.filterAll();
+            dc.redrawAll();
+        } else {
+            giftPersonalDimension.filter("Personal");
             dc.redrawAll();
         }
     })
@@ -166,8 +176,8 @@ d3.csv("products_customer_internal.csv", function(data) {
     //////////// 2015-10-13 ML
     //populate dropdowns with only available slices for the current customer
     document.getElementById('customerName').innerHTML = customerSelected + "'s ";
-    populateDropdown(data2, 'MostRecentPurchaseYear', 'mostRecentPurchaseYear', '', 'All', 1, 'All Time');
-    populateDropdown(data2, 'giftstatus', 'gift_personal', ' Purchases', 'Personal', 0, '');
+    //populateDropdown(data2, 'MostRecentPurchaseYear', 'mostRecentPurchaseYear', '', 'All', 1, 'All Time');
+    //populateDropdown(data2, 'giftstatus', 'gift_personal', ' Purchases', 'Personal', 0, '');
 
     //remove hide_bad_ratings checkbox if the customer doesn't have any 4 or 5 star ratings on file
     (function() {
@@ -186,12 +196,12 @@ d3.csv("products_customer_internal.csv", function(data) {
     //Show Specific customer_name
     d3.selectAll("select").on("change", function() {
         //customer_name_chosen = loadSelected("customer_choice","value");
-        gift_personal_choice = loadSelected("gift_personal", "value");
+        //gift_personal_choice = loadSelected("gift_personal", "value");
         //customerDimension.filter(customer_name_chosen); 
         //customerProductCount = data.filter(function(d) {return d.customer === customer_name_chosen;}).length; 
         customerProductCount = data2.length;
         document.getElementById("all_count").innerHTML = customerProductCount;
-        giftPersonalDimension.filter(gift_personal_choice)
+        //giftPersonalDimension.filter(gift_personal_choice)
         show_product_list();
         dc.redrawAll();
     });
@@ -233,7 +243,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         d.bottles = +d.bottles;
         d.giftStatus = d.giftstatus;
         d.stock = +d.stock;
-        d.purchase_date = +d.lastorderdate;
+        d.purchase_date = +d.MostRecentPurchaseDate;
     });
 
 
@@ -361,8 +371,8 @@ d3.csv("products_customer_internal.csv", function(data) {
     customerDimension.filter(original_name_chosen); 
     */
 
-    gift_personal = loadSelected("gift_personal", "value");
-    giftPersonalDimension.filter(gift_personal);
+    //gift_personal = loadSelected("gift_personal", "value");
+    giftPersonalDimension.filter("Personal");
 
     var chartMargins = {
         top: 0,
@@ -513,15 +523,31 @@ d3.csv("products_customer_internal.csv", function(data) {
     }
     console.log(sort_metric);
 
-    show_correct_buttons = function(d) {
+    show_history = function(d) {
+        return "<div class='item_bottles'>" + d.bottles +
+                " bottle(s) purchased</div>";
+    }
 
-        if (d.stock === 0) {
-            return "<div class='item_stats'><div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased </div></div><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
-        } else {
-            return "<div class='item_bottles'>" + d.bottles +
-                " bottle(s) purchased</div><a class='action_link' href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>Add to Cart</a><div><a class='get_recs_button' id='get_recs_button_" + d.productid + "' data-productid=" + d.productid + ">Get Recs</a></div>";
+    show_add_to_cart = function(d) {
+
+        if (d.stock !== 0) {
+            return "<a class='action_link' " + 
+                "href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + 
+                d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>" + 
+                "Buy Again</a>";
+        } else
+        {
+            return ""
         }
+    };
+
+    show_action_buttons = function(d) {
+
+        return "<div class='product_action_links'><a class='more_info' id='get_info_" +
+            d.productid + "' data=" + d.productid + ">Quick View</a> | " + 
+            "<a class='get_recs_button' id='get_recs_button_" +
+            d.productid + "' data-productid=" + d.productid + ">Similar Wine</a></div>"
+
     };
 
     show_stars = function(d) {
@@ -539,10 +565,7 @@ d3.csv("products_customer_internal.csv", function(data) {
 
     var show_product_list = function() {
 
-
-
         var
-
             sort_value = loadSelected("sort_choice", "value");
         console.log("Sort = " + sort_value);
 
@@ -555,7 +578,7 @@ d3.csv("products_customer_internal.csv", function(data) {
             var allProducts = typeDimension.top(Infinity).sort(function(a, b) {
                 return a[sort_value] - b[sort_value];
             });
-        } else if (sort_value === "price_ascending") {
+        } else if (sort_value === "price") {
             var allProducts = typeDimension.top(Infinity).sort(function(a, b) {
                 return a.price - b.price;
             });
@@ -582,7 +605,15 @@ d3.csv("products_customer_internal.csv", function(data) {
 
         topProducts.forEach(function(d) {
 
-            $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'><image class='list_image' src='http://cache2.wine.com/labels/" + d.productid + "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" + show_stars(d) + "</div><div>" + show_correct_buttons(d) + " </div></div>");
+            $('#product_list').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + 
+                d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" +
+                "<image class='list_image' src='http://cache2.wine.com/labels/" + d.productid + 
+                "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + 
+                d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + 
+                d.descriptionWithVintage + "</a></div><div class='item_region'>" + d.appellation + ", " + d.region + 
+                "</div><div class='item_price'>" + moneyFormatDecimal(d.price) + "</div><div>" 
+                + show_stars(d) + "</div><div>" + show_history(d) + show_add_to_cart(d) + show_action_buttons(d) +
+                 " </div></div>");
 
             var returnedProducts = [];
             var this_product_id = d.product_id;
@@ -611,7 +642,7 @@ d3.csv("products_customer_internal.csv", function(data) {
 
             var product_node = response.Products.List[0];
 
-            var modal_description = product_node.Description;
+            var winemakernote = product_node.Description;
             var Longitude = response.Products.List[0].GeoLocation.Longitude;
             var Latitude = response.Products.List[0].GeoLocation.Latitude;
             var prod_id = product_node.Id;
@@ -626,14 +657,15 @@ d3.csv("products_customer_internal.csv", function(data) {
 
             var small_label = "<img style='display:inline-block; float:left; clear: none; margin: 10px;' src='http://cache.wine.com/labels/" + prod_id + "m.jpg'>";
 
-            var product_info = "<h5>" + prod_varietal + " from " + prod_appellation + ", " + prod_region + "</h5>";
+            var product_info = "<p>" + prod_varietal + " from " + prod_appellation + ", " + prod_region + "</p>";
 
+            var winemakernote = "<hr><div class='winemakernote'><p>" + winemakernote + "</p></div>"
 
             if (Longitude !== -360) {
 
-                $('.modal-body').html("<div class='row' style='background-color:white; padding:10px;'>" + small_label + product_info + modal_description + "</div><div class='row' style='background-color:white; padding:10px';'><iframe width='250' height='250' frameborder='0' style='border:0; float: right; display: inline-block;' src='https://www.google.com/maps/embed/v1/place?q=" + Latitude + "%20" + Longitude + "&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q&zoom=14&maptype=satellite'></iframe></div>");
+                $('.modal-body-product').html("<div class='row' style='background-color:white; padding:10px;'>" + small_label + product_info + winemakernote + "</div><div class='row' style='background-color:white; padding:10px';'><iframe width='250' height='250' frameborder='0' style='border:0; float: right; display: inline-block;' src='https://www.google.com/maps/embed/v1/place?q=" + Latitude + "%20" + Longitude + "&key=AIzaSyAEy8PIgWRmTXkKQZKbv8Qg39JoSWFmr2Q&zoom=8&maptype=satellite'></iframe></div>");
             } else {
-                $('.modal-body').html("<div>" + small_label + product_info + modal_description + "</div>");
+                $('.modal-body-product').html("<div>" + small_label + product_info + winemakernote + "</div>");
             }
 
             $('.modal-title').html(prod_name);
@@ -654,7 +686,6 @@ d3.csv("products_customer_internal.csv", function(data) {
 
     show_product_list();
 
-
     $('body').on('click', '.get_recs_button', function() { 
         recsObject.items = {};
         recsObject.productIdInput = $(this).data('productid');
@@ -667,9 +698,7 @@ d3.csv("products_customer_internal.csv", function(data) {
         show_product_list();
         //runAjax();
 
-
     });
-
 
     /****************************
      * Step6: Render the Charts  *
