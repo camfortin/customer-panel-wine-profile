@@ -74,10 +74,26 @@ function listSlicers(elementId) {
     currentChart = eval(chartNameArray[i]);
     currentChartTitle = toTitleCase(chartNameArray[i].replace('Chart',''));
     if(currentChart.filter() != null) {
-      slicerArray.push(currentChartTitle + ' (' + currentChart.filters().join(',') + ')');
+      if (currentChart.filters().length > 2) {
+        slicerArray.push(currentChartTitle + ' (multiple)');
+      }
+      else {
+        slicerArray.push(currentChartTitle + ' (' + currentChart.filters().join(', ') + ')');       
+      }
     }
   }
-  document.getElementById(elementId).innerHTML = slicerArray.join(', ');
+
+  var resetValue = "";
+  var filterValue = "";
+  var resetLink = "<a class='main_count_link' id='slicerReset' href='javascript:resetCharts()'>Clear</a>"
+
+  if (slicerArray.length > 0) {
+    resetValue = resetLink;
+    filterValue = "Filters: "
+  }
+
+  document.getElementById(elementId).innerHTML = "<div id='slicers'>" + filterValue + slicerArray.join(', ') + "</div> " + resetValue;
+
   console.log('Current Slicers: ' + document.getElementById(elementId).innerHTML);
 }
 
@@ -97,4 +113,11 @@ function getParameterByName(name) {
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "1841734" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function resetCharts() {
+    dc.filterAll();
+    dc.redrawAll();
+    runAjax();
+    listSlicersForAllElements();
 }

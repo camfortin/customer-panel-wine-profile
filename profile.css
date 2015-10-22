@@ -3,16 +3,26 @@ padding-top: 55px;
 }
 
 #slicerList {
-	color: blue;
 	font-size: 14px;
 	margin-top: 10px;
 	display: block;
+	margin-left: -5px;
 } 
 
 .dc-chart g.row text {
 	fill: #111;
 	font-size: 16px;
 
+}
+
+#slicerReset {
+	color: #337ab7 !important;
+	font-weight: bold;
+}
+
+#slicers {
+	color:#666;
+	display: inline-block;
 }
 
 .navbar-nav > li > a, .navbar-brand {

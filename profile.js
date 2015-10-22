@@ -157,6 +157,7 @@ console.log(data);
         listSlicersForAllElements();
     });
 
+
     
     console.log(customerSelected);
 
@@ -238,7 +239,8 @@ console.log(data);
         d.bottles = +d.bottles;
         d.giftStatus = d.giftstatus;
         d.stock = +d.stock;
-        d.purchase_date = +d.MostRecentPurchaseDate;
+        //d.purchase_date = +d.MostRecentPurchaseDate;
+        d.purchase_date = +d.mostrecentpurchaseyear;
     });
 
 
