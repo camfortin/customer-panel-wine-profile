@@ -20,6 +20,10 @@ padding-top: 55px;
 	font-weight: bold;
 }
 
+.modal-body-recs {
+	min-height: 800px;
+}
+
 #slicers {
 	color:#666;
 	display: inline-block;

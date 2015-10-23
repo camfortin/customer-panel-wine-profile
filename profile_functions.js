@@ -92,10 +92,15 @@ function listSlicers(elementId) {
     filterValue = "Filters: "
   }
 
-  document.getElementById(elementId).innerHTML = "<div id='slicers'>" + filterValue + slicerArray.join(', ') + "</div> " + resetValue;
+  document.getElementById(elementId).innerHTML = "<div id='slicers'><a style='font-wight:bold' class='hide-filters'>Hide Charts</a> " + filterValue + slicerArray.join(', ') + "</div> " + resetValue;
 
   console.log('Current Slicers: ' + document.getElementById(elementId).innerHTML);
 }
+
+$(document).on('click', ".hide-filters", function() {
+  $('#filters').slideToggle();
+  $('.hide-filters').html("Show Charts");
+});
 
 function listSlicersForAllElements() {
   var spanIds = ['slicerList'];

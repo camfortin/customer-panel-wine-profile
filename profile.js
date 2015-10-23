@@ -49,6 +49,7 @@ function getRecs(this_strategy_description, this_product_id) {
                 item.sale_price = item.salePriceCents ? ('' + item.salePriceCents).replace(/(.*)([0-9]{2}$)/, '$$$1.$2') : item.salePriceCents;
                 return item;
             });
+
             data.placements[0].recommendedProducts = recsObject.items;
             recsObject.dataOut = data;
             var strategyMessage = recsObject.dataOut.placements[0].strategyMessage;
@@ -56,9 +57,10 @@ function getRecs(this_strategy_description, this_product_id) {
             recommendations = recsObject.dataOut.placements[0].recommendedProducts;
 
             shuffle(recommendations);
+            console.log(recommendations);
 
             var numberofproducts = recommendations.length;
-            var showthismany = Math.min(numberofproducts, 5)
+            var showthismany = Math.min(numberofproducts, 6)
 
             var topRecs = [];
 
@@ -70,7 +72,20 @@ function getRecs(this_strategy_description, this_product_id) {
             $('.recsList').html("");
 
             topRecs.forEach(function(d) {
-                $('.recsList').append('<li>' + d.name + '</li>');
+                //$('.recsList').append('<li class="rec_product">' + d.name + '</li>');
+                $('.recsList').append("<div class='col-sm-4 product-list-item'><a href='http://www.wine.com/v6/wine/" + 
+                d.productid + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" +
+                "<image class='list_image' src='http://cache2.wine.com/labels/" + d.id + 
+                "l.jpg' padding-right='10px'></a><div class='item_title'><a href='http://www.wine.com/v6/wine/" + 
+                d.id + "/Detail.aspx?s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='_blank'>" + 
+                d.name + "</a>" + "<div class='item_price'>" + d.sale_price + "</div>" + "<a class='action_link' " + 
+                "href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + 
+                d.id + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>" + 
+                "Add to Cart</a>" + "<div class='product_action_links'><a class='more_info' id='get_info_" +
+                d.id + "' data=" + d.id + ">Quick View</a></div>" +"</div>");
+
+
+
 
             });
         } else {
@@ -530,7 +545,7 @@ console.log(data);
     show_add_to_cart = function(d) {
 
         if (d.stock !== 0) {
-            return "<a class='action_link' " + 
+            return "<a style='font-weight:bold' class='action_link' " + 
                 "href='http://www.wine.com/checkout/default.aspx?mode=add&state=CA&product_id=" + 
                 d.productid + "&s=wine_profile_past_purchases&cid=wine_profile_past_purchases' target='blank'>" + 
                 "Buy Again</a>";
